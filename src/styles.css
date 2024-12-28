@@ -1,3 +1,7 @@
+/******************************************************************************/
+/****************************START OF CSS RESET********************************/
+/******************************************************************************/
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -9,11 +13,12 @@
 * {
   margin: 0;
   padding: 0;
+  /* border: 1px solid magenta; */
 }
 
 body {
   /* 3. Add accessible line-height */
-  line-height: 1.5;
+  line-height: 1.15;
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
 }
@@ -73,3 +78,116 @@ h6 {
 /******************************END OF CSS RESET********************************/
 /******************************************************************************/
 
+img {
+  color: black;
+  min-width: 25px;
+  height: auto;
+}
+
+button {
+  cursor: pointer;
+}
+
+.main-grid {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+.sidebar {
+  background-color: #e6e6e6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.logo {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  align-self: center;
+  font-size: 3.5rem;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 5%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  padding-left: 0;
+  gap: 1rem;
+}
+
+.menu>button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 90%;
+  align-self: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.projects-title {
+  display: flex;
+  align-self: flex-start;
+  width: 100%;
+}
+
+.projects-title>p {
+  font-size: 2rem;
+  margin-right: 2rem;
+}
+
+.projects-title>button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-project {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.sidebar-project-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.sidebar-project-name {
+  font-size: 1.5rem;
+  width: 75%;
+  text-align: left;
+}
+
+.sidebar-task {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 3rem;
+}
+
+.sidebar-task>*:nth-child(2) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 50%;
+}
