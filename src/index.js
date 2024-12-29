@@ -193,11 +193,11 @@ class DOMManipulator {
                 sidebarTask.dataset.taskIndex = taskIndex;
 
                 const sidebarTaskPriority = document.createElement("div");
-                sidebarTaskPriority.classList.add("sidebar-task-priority");
-                sidebarTaskPriority.dataset.taskPriority = task.taskPriority;
+                sidebarTaskPriority.classList.add("sidebar-task-priority");                
                 const sidebarTaskPriorityImg = document.createElement("img");
                 sidebarTaskPriorityImg.src = priorityIcon;
                 sidebarTaskPriorityImg.alt = "priority color";
+                sidebarTaskPriorityImg.dataset.taskPriority = task.taskPriority;
                 const sidebarTaskName = document.createElement("p");
                 sidebarTaskName.classList.add("sidebar-task-name");
                 sidebarTaskName.textContent = task.taskName;
@@ -206,6 +206,7 @@ class DOMManipulator {
                 const sidebarTaskCheckImg = document.createElement("img");
                 sidebarTaskCheckImg.src = checkTaskIcon;
                 sidebarTaskCheckImg.alt = "check task button";
+                sidebarTaskCheckImg.dataset.taskCheck = task.isCompleted;
                 const sidebarTaskEdit = document.createElement("button");
                 sidebarTaskEdit.classList.add("sidebar-task-edit");
                 const sidebarTaskEditImg = document.createElement("img");

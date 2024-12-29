@@ -88,8 +88,9 @@ NOTES:
             -   Instead of initializing it to 0, it must be initialized as the max values of the ID's already present in the projectList and taskList (this is needed if data is loaded from localStorage).
         -   The DOMManipulator will have a switch for priorities where it'll set the color based on the string matching the priority.
         -   The DOMManipulator will have a method (more than one) that renders the content of an area based on the data stored in StateManager.
+        -   The way icons are implemented at the moment, there's no way to treat them as svg, but only as <img> HTML elements.
 
-HTML for reference:
+<!-- HTML for reference:
 ```html
     <div class="projects-title">
         <p>Projects</p>
@@ -225,4 +226,4 @@ HTML for reference:
             </button>
         </div>
     </div>
-```
+``` -->
