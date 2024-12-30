@@ -19,6 +19,7 @@ class DOMManipulator {
     setEventListenersManager() { };
     renderSidebarProjects() { };
     showCheckTask() { };
+    renderAddProjectModal() { };
 
 
 
@@ -103,7 +104,7 @@ class DOMManipulator {
                 sidebarTaskDelete.classList.add("sidebar-task-delete");
                 const sidebarTaskDeleteImg = document.createElement("img");
                 sidebarTaskDeleteImg.src = deleteTaskIcon;
-                sidebarTaskDeleteImg.alt = "delete task button";                
+                sidebarTaskDeleteImg.alt = "delete task button";
 
                 sidebarTaskPriority.appendChild(sidebarTaskPriorityImg);
                 sidebarTask.appendChild(sidebarTaskPriority);
@@ -139,6 +140,26 @@ class DOMManipulator {
         taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
         taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
     };
+
+    renderAddProjectModal() {
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+
+        modal.innerHTML =   `
+                            <div class="modal-content">
+                                <input type="text" id="projectNameInput" placeholder="Enter project name" />
+                                <button id="addProjectButton">Add</button>
+                            </div>
+                            `;
+
+        document.body.appendChild(modal);
+
+        this.eventListenersManager.addProjectModalListeners(modal);
+    };
+
+    removeModal(modal) {
+        modal.remove();
+    }
 
 
 };

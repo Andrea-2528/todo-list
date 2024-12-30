@@ -8,7 +8,7 @@ class EventListenersManager {
         this.stateManager = stateManager;
         this.domManipulator = domManipulator;
     };
-    
+
     addSidebarEventListeners() {
         // This adds event listeners to the sidebar for these actions:
         // Add project, Open project, Add task, Check task, Edit task and Delete task.
@@ -66,6 +66,34 @@ class EventListenersManager {
                 this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
             });
         });
+
+
+
+    };
+
+    addProjectModalListeners(modal) {
+        const modalButton = modal.querySelector("#addProjectButton");
+
+        modalButton.addEventListener("click", () => {
+            const projectName = modal.querySelector("#projectNameInput").value.trim();
+            this.stateManager.addProject(projectName);
+            this.domManipulator.removeModal(modal);
+            this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+        });
+
+        modal.addEventListener("click", e => {                          //On click, closes modal dialog if click is outside dialog
+            const dialogDimensions = modal.getBoundingClientRect();
+            if (
+                e.clientX < dialogDimensions.left ||
+                e.clientX > dialogDimensions.right ||
+                e.clientY < dialogDimensions.top ||
+                e.clientY > dialogDimensions.bottom
+            ) {
+                this.domManipulator.removeModal(modal);
+            }
+        });
+
+
 
 
 
