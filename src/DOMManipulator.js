@@ -20,9 +20,10 @@ class DOMManipulator {
     renderSidebarProjects() { };
     showCheckTask() { };
     renderAddProjectModal() { };
+    renderAddTaskModal() { };
+    renderEditTaskModal() { };
 
-
-
+    removeModal() { };
 
     setEventListenersManager(eventListenersManager) {
         this.eventListenersManager = eventListenersManager;
@@ -145,7 +146,7 @@ class DOMManipulator {
         const modal = document.createElement("div");
         modal.classList.add("modal");
 
-        modal.innerHTML =   `
+        modal.innerHTML = `
                             <div class="modal-content">
                                 <input type="text" id="projectNameInput" placeholder="Enter project name" />
                                 <button id="addProjectButton">Add</button>
@@ -157,9 +158,62 @@ class DOMManipulator {
         this.eventListenersManager.addProjectModalListeners(modal);
     };
 
+    renderAddTaskModal(index) {
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+
+        modal.innerHTML = `
+                            <div class="modal-content">
+                                <input type="text" id="taskNameInput" placeholder="Enter task name" />
+                                <textarea id="taskDescriptionInput" placeholder="Enter task description"></textarea>
+                                <div>
+                                    <label>Priority:</label>
+                                    <input type="radio" id="priorityLow" name="taskPriority" value="low" />
+                                    <label for="priorityLow">Low</label>
+                                    <input type="radio" id="priorityMedium" name="taskPriority" value="medium" />
+                                    <label for="priorityMedium">Medium</label>
+                                    <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
+                                    <label for="priorityHigh">High</label>
+                                </div>
+                                <input type="text" id="taskDateInput" placeholder="Enter task date" />
+                                <button id="addTaskButton">Add</button>
+                            </div>
+                            `;
+
+        document.body.appendChild(modal);
+
+        this.eventListenersManager.addTaskModalListeners(modal, index);
+    };
+
+    renderEditTaskModal(projectIndex, taskIndex, projectsArray) {
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+
+        modal.innerHTML = `
+                            <div class="modal-content">
+                                <input type="text" id="taskNameInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskName}" />
+                                <textarea id="taskDescriptionInput">${projectsArray[projectIndex].tasks[taskIndex].taskDescription}</textarea>
+                                <div>
+                                    <label>Priority:</label>
+                                    <input type="radio" id="priorityLow" name="taskPriority" value="low" />
+                                    <label for="priorityLow">Low</label>
+                                    <input type="radio" id="priorityMedium" name="taskPriority" value="medium" />
+                                    <label for="priorityMedium">Medium</label>
+                                    <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
+                                    <label for="priorityHigh">High</label>
+                                </div>
+                                <input type="text" id="taskDateInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskDate}" />
+                                <button id="editTaskButton">Edit</button>
+                            </div>
+                            `;
+        document.body.appendChild(modal);
+
+        this.eventListenersManager.editTaskModalListeners(modal, projectIndex, taskIndex);
+
+    };
+
     removeModal(modal) {
         modal.remove();
-    }
-
+    };
 
 };

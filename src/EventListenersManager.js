@@ -9,13 +9,21 @@ class EventListenersManager {
         this.domManipulator = domManipulator;
     };
 
-    addSidebarEventListeners() {
-        // This adds event listeners to the sidebar for these actions:
-        // Add project, Open project, Add task, Check task, Edit task and Delete task.
+    addSidebarEventListeners() { };
+    addProjectModalListeners() { };
+    addTaskModalListeners() { };
+    editTaskModalListeners() { };
 
+    // TODO
+    // This adds event listeners to the sidebar for these actions:
+    // Add project, Open project, Add task, Check task, Edit task and Delete task.
+    addSidebarEventListeners() {
+
+
+        // Calls DOMManipulator method to show a modal to insert project name
         const addProjectButton = document.querySelector(".add-project");
         addProjectButton.addEventListener("click", () => {
-            this.domManipulator.renderAddProjectModal();                                        //TODO: Calls DOMManipulator method to show a modal to insert project name
+            this.domManipulator.renderAddProjectModal();
         });
 
         const openProjectPageButton = document.querySelectorAll(".sidebar-project-name");
@@ -25,10 +33,11 @@ class EventListenersManager {
             });
         });
 
+        // Calls DOMManipulator method to show a modal to insert a new task
         const addTaskButton = document.querySelectorAll(".sidebar-add-task");
         addTaskButton.forEach((button, index) => {
             button.addEventListener("click", () => {
-                this.domManipulator.renderAddTaskModal(index);                                  //TODO: Calls DOMManipulator method to show a modal to insert a new task
+                this.domManipulator.renderAddTaskModal(index);
             });
         });
 
@@ -45,13 +54,15 @@ class EventListenersManager {
             });
         });
 
+        // Calls DOMManipulator method to show a modal to edit a task
         const editTaskButton = document.querySelectorAll(".sidebar-task-edit");
         editTaskButton.forEach((button) => {
             button.addEventListener("click", () => {
                 const taskIndex = button.closest(".sidebar-task").dataset.taskIndex;
                 const projectIndex = button.closest(".sidebar-project").dataset.projectIndex;
 
-                this.domManipulator.renderEditTaskModal(projectIndex, taskIndex);               //TODO: Calls DOMManipulator method to show a modal to edit a task
+                const projectsArray = this.stateManager.getAllProjects();
+                this.domManipulator.renderEditTaskModal(projectIndex, taskIndex, projectsArray);
             });
         });
 
@@ -71,6 +82,7 @@ class EventListenersManager {
 
     };
 
+    // This adds event listeners to the add project modal
     addProjectModalListeners(modal) {
         const modalButton = modal.querySelector("#addProjectButton");
 
@@ -81,24 +93,56 @@ class EventListenersManager {
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
         });
 
-        modal.addEventListener("click", e => {                          //On click, closes modal dialog if click is outside dialog
-            const dialogDimensions = modal.getBoundingClientRect();
-            if (
-                e.clientX < dialogDimensions.left ||
-                e.clientX > dialogDimensions.right ||
-                e.clientY < dialogDimensions.top ||
-                e.clientY > dialogDimensions.bottom
-            ) {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
                 this.domManipulator.removeModal(modal);
             }
         });
 
+    };
 
+    // This adds event listeners to the add task modal
+    addTaskModalListeners(modal, index) {
+        const addTaskButton = modal.querySelector("#addTaskButton");
+        addTaskButton.addEventListener("click", () => {
+            const taskName = modal.querySelector("#taskNameInput").value.trim();
+            const taskDescription = modal.querySelector("#taskDescriptionInput").value.trim();
+            const taskPriority = modal.querySelector('input[name="taskPriority"]:checked')?.value || "low";
+            const taskDate = modal.querySelector("#taskDateInput").value.trim();
 
+            this.stateManager.addTask(index, taskName, taskDescription, taskPriority, taskDate);
+            this.domManipulator.removeModal(modal);
+            this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+            
+        });
 
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                this.domManipulator.removeModal(modal);
+            };
+        });
 
     };
 
+    editTaskModalListeners(modal, projectIndex, taskIndex) {
+        const editTaskButton = modal.querySelector("#editTaskButton");
+        editTaskButton.addEventListener("click", () => {
+            const taskName = modal.querySelector("#taskNameInput").value.trim();
+            const taskDescription = modal.querySelector("#taskDescriptionInput").value.trim();
+            const taskPriority = modal.querySelector('input[name="taskPriority"]:checked')?.value || "low";
+            const taskDate = modal.querySelector("#taskDateInput").value.trim();
 
+            this.stateManager.editTask(projectIndex, taskIndex, taskName, taskDescription, taskPriority, taskDate);
+            this.domManipulator.removeModal(modal);
+            this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+            console.log(this.stateManager);
+        });
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                this.domManipulator.removeModal(modal);
+            };
+        });
+    };
 
 };
