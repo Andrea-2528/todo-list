@@ -206,3 +206,18 @@ button {
 .sidebar-task-priority > img[data-task-priority="high"] {
   filter: brightness(0) saturate(100%) invert(20%) sepia(95%) saturate(2505%) hue-rotate(346deg) brightness(88%) contrast(104%)
 }
+
+.sidebar-task-priority > img[data-is-check="true"] {
+  visibility: hidden;
+}
+.sidebar-task-priority > img[data-is-check="false"] {
+  visibility: visible;
+}
+
+.sidebar-task-name[data-is-check="true"] {
+  text-decoration: line-through;
+}
+
+.sidebar-task-name[data-is-check="false"] {
+  text-decoration: none;
+}

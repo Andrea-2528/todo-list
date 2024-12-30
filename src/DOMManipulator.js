@@ -15,6 +15,14 @@ class DOMManipulator {
         this.eventListenersManager = null;
     };
 
+    //Methods list
+    setEventListenersManager() { };
+    renderSidebarProjects() { };
+    showCheckTask() { };
+
+
+
+
     setEventListenersManager(eventListenersManager) {
         this.eventListenersManager = eventListenersManager;
     };
@@ -32,7 +40,7 @@ class DOMManipulator {
         projectTitlePara.textContent = "Projects";
         const addProjectButton = document.createElement("button");
         addProjectButton.classList.add("add-project");
-        const addProjectImg = document.createElement("img");        
+        const addProjectImg = document.createElement("img");
         addProjectImg.src = addProjectIcon;
         addProjectImg.alt = "add project button";
 
@@ -63,21 +71,23 @@ class DOMManipulator {
             sidebarProjectTitle.appendChild(sidebarProjectName);
             sidebarProjectTitle.appendChild(sidebarAddTask);
             sidebarProject.appendChild(sidebarProjectTitle);
-            
+
             project.tasks.forEach((task, taskIndex) => {
                 const sidebarTask = document.createElement("div");
                 sidebarTask.classList.add("sidebar-task");
                 sidebarTask.dataset.taskIndex = taskIndex;
 
                 const sidebarTaskPriority = document.createElement("div");
-                sidebarTaskPriority.classList.add("sidebar-task-priority");                
+                sidebarTaskPriority.classList.add("sidebar-task-priority");
                 const sidebarTaskPriorityImg = document.createElement("img");
                 sidebarTaskPriorityImg.src = priorityIcon;
                 sidebarTaskPriorityImg.alt = "priority color";
                 sidebarTaskPriorityImg.dataset.taskPriority = task.taskPriority;
+                sidebarTaskPriorityImg.dataset.isCheck = task.isCompleted;
                 const sidebarTaskName = document.createElement("p");
                 sidebarTaskName.classList.add("sidebar-task-name");
                 sidebarTaskName.textContent = task.taskName;
+                sidebarTaskName.dataset.isCheck = task.isCompleted;
                 const sidebarTaskCheck = document.createElement("button");
                 sidebarTaskCheck.classList.add("sidebar-task-check");
                 const sidebarTaskCheckImg = document.createElement("img");
@@ -93,7 +103,7 @@ class DOMManipulator {
                 sidebarTaskDelete.classList.add("sidebar-task-delete");
                 const sidebarTaskDeleteImg = document.createElement("img");
                 sidebarTaskDeleteImg.src = deleteTaskIcon;
-                sidebarTaskDeleteImg.alt = "delete task button";
+                sidebarTaskDeleteImg.alt = "delete task button";                
 
                 sidebarTaskPriority.appendChild(sidebarTaskPriorityImg);
                 sidebarTask.appendChild(sidebarTaskPriority);
@@ -109,7 +119,26 @@ class DOMManipulator {
 
             projectList.appendChild(sidebarProject);
 
-        });        
+        });
+
+        this.eventListenersManager.addSidebarEventListeners();
 
     };
+
+    showCheckTask(projectIndex, taskIndex) {
+
+        const projectElement = document.querySelector(`.sidebar-project[data-project-index="${projectIndex}"]`);
+        const taskElement = projectElement.querySelector(`.sidebar-task[data-task-index="${taskIndex}"]`);
+
+        // Makes the icons and text change data-attribute and therefore style
+        const checkImgElement = taskElement.querySelector(".sidebar-task-check > img");
+        const taskNameElement = taskElement.querySelector(".sidebar-task-name");
+        const taskPriorityElement = taskElement.querySelector(".sidebar-task-priority > img");
+
+        checkImgElement.dataset.taskCheck = checkImgElement.dataset.taskCheck === "false" ? "true" : "false";
+        taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
+        taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
+    };
+
+
 };

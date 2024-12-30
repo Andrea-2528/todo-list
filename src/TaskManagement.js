@@ -19,6 +19,7 @@ class Project {
         this.tasks = [];
     };
 
+    //Methods list
     addTask() { };
     editTask() { };
     deleteTask() { };
@@ -54,6 +55,7 @@ class ProjectList {
         this.projects = [];
     };
 
+    //Methods list
     addProject() { };
     editProject() { };
     deleteProject() { };

@@ -8,7 +8,8 @@ class StateManager {
     constructor() {
         this.projectList = new ProjectList();
     };
-
+    
+    //Methods list
     addProject() { };
     editProject() { };
     deleteProject() { };
