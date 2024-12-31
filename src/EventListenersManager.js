@@ -10,15 +10,13 @@ class EventListenersManager {
     };
 
     addSidebarEventListeners() { };
+    addMainpageEventListeners() { };
     addProjectModalListeners() { };
     addTaskModalListeners() { };
     editTaskModalListeners() { };
 
-    // TODO
-    // This adds event listeners to the sidebar for these actions:
     // Add project, Open project, Add task, Check task, Edit task and Delete task.
     addSidebarEventListeners() {
-
 
         // Calls DOMManipulator method to show a modal to insert project name
         const addProjectButton = document.querySelector(".add-project");
@@ -26,10 +24,11 @@ class EventListenersManager {
             this.domManipulator.renderAddProjectModal();
         });
 
+        // Calls DOMManipulator method to render the main page based on which project clicked
         const openProjectPageButton = document.querySelectorAll(".sidebar-project-name");
         openProjectPageButton.forEach((button, index) => {
             button.addEventListener("click", () => {
-                this.domManipulator.renderMainPage(index);                                      //TODO: Calls DOMManipulator method to render the main page based on which project clicked
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index));
             });
         });
 
@@ -77,8 +76,11 @@ class EventListenersManager {
                 this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
             });
         });
+    };
 
-
+    //TODO
+    // Edit project, Delete project, Delete task, Edit task, Check task, Expand task
+    addMainpageEventListeners() { 
 
     };
 
@@ -113,7 +115,7 @@ class EventListenersManager {
             this.stateManager.addTask(index, taskName, taskDescription, taskPriority, taskDate);
             this.domManipulator.removeModal(modal);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-            
+
         });
 
         modal.addEventListener("click", (e) => {
@@ -124,6 +126,7 @@ class EventListenersManager {
 
     };
 
+    // This adds event listeners to the edit task modal
     editTaskModalListeners(modal, projectIndex, taskIndex) {
         const editTaskButton = modal.querySelector("#editTaskButton");
         editTaskButton.addEventListener("click", () => {

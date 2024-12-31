@@ -90,140 +90,101 @@ NOTES:
         -   The DOMManipulator will have a method (more than one) that renders the content of an area based on the data stored in StateManager.
         -   The way icons are implemented at the moment, there's no way to treat them as svg, but only as <img> HTML elements.
 
-<!-- HTML for reference:
+<!-- REFERENCE OF HTML TO BE GENERATED INSIDE div.main-page -->
 ```html
-    <div class="projects-title">
-        <p>Projects</p>
-        <button class="add-project">
-            <img src="assets/images/add-project.svg" alt="add project button">
+<div class="main-page">
+    <div class="title-bar">
+        <p>`ProjectName`</p>
+        <button class="title-bar-edit">
+            <img src="assets/images/edit.svg" alt="">
+        </button>
+        <button class="title-bar-delete">
+            <img src="assets/images/delete.svg" alt="">
         </button>
     </div>
-    <div class="sidebar-project">
-        <div class="sidebar-project-title">
-            <button class="sidebar-project-name">Work</button>
-            <button class="sidebar-add-task">
-                <img src="assets/images/add-task.svg" alt="add task button">
-            </button>
+        <div class="bullet-board">
+            <div class="main-task">
+                <div class="task-header">
+                    <div class="task-top">
+                        <div class="task-priority">
+                            <img src="assets/images/priority.svg" alt="">
+                        </div>
+                        <p class="task-name">`TaskName`</p>
+                    </div>
+                    <div class="task-date">`TaskDate`</div>
+                </div>
+                <div class="task-description">`TaskDescription`</div>
+                <button class="task-expand">
+                    <img src="assets/images/arrow-down.svg" alt="">
+                </button>
+                <div class="task-buttons">
+                    <button class="task-delete">
+                        <img src="assets/images/delete.svg" alt="">
+                    </button>
+                    <button class="task-edit">
+                        <img src="assets/images/edit.svg" alt="">
+                    </button>
+                    <button class="task-check">
+                        <img src="assets/images/check.svg" alt="">
+                    </button>
+                </div>
+            </div>
+            <div class="main-task">
+                <div class="task-header">
+                    <div class="task-top">
+                        <div class="task-priority">
+                            <img src="assets/images/priority.svg" alt="">
+                        </div>
+                        <p class="task-name">`TaskName`</p>
+                    </div>
+                    <div class="task-date">`TaskDate`</div>
+                </div>
+                <div class="task-description">`TaskDescription`</div>
+                <button class="task-expand">
+                    <img src="assets/images/arrow-down.svg" alt="">
+                </button>
+                <div class="task-buttons">
+                    <button class="task-delete">
+                        <img src="assets/images/delete.svg" alt="">
+                    </button>
+                    <button class="task-edit">
+                        <img src="assets/images/edit.svg" alt="">
+                    </button>
+                    <button class="task-check">
+                        <img src="assets/images/check.svg" alt="">
+                    </button>
+                </div>
+            </div>
+            <div class="main-task">
+                <div class="task-header">
+                    <div class="task-top">
+                        <div class="task-priority">
+                            <img src="assets/images/priority.svg" alt="">
+                        </div>
+                        <p class="task-name">`TaskName`</p>
+                    </div>
+                    <div class="task-date">`TaskDate`</div>
+                </div>
+                <div class="task-description">`TaskDescription`</div>
+                <button class="task-expand">
+                    <img src="assets/images/arrow-down.svg" alt="">
+                </button>
+                <div class="task-buttons">
+                    <button class="task-delete">
+                        <img src="assets/images/delete.svg" alt="">
+                    </button>
+                    <button class="task-edit">
+                        <img src="assets/images/edit.svg" alt="">
+                    </button>
+                    <button class="task-check">
+                        <img src="assets/images/check.svg" alt="">
+                    </button>
+                </div>
+            </div>
+
+            <!-- repetitions of #n main-tasks -->
+
         </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Check Inventory</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Prepare meeting</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Do actual work</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-    </div>
-    <div class="sidebar-project">
-        <div class="sidebar-project-title">
-            <button class="sidebar-project-name">Home</button>
-            <button class="sidebar-add-task">
-                <img src="assets/images/add-task.svg" alt="add task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Clean bedroom</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Buy groceries</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Change light bulb</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-    </div>
-    <div class="sidebar-project">
-        <div class="sidebar-project-title">
-            <button class="sidebar-project-name">Hobbies</button>
-            <button class="sidebar-add-task">
-                <img src="assets/images/add-task.svg" alt="add task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Practice guitar</p>
-            <button class="sideWorkbar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-        <div class="sidebar-task">
-            <div class="sidebar-task-priority"><img src="assets/images/priority.svg" alt="priority color"></div>
-            <p class="sidebar-task-name">Code for fun</p>
-            <button class="sidebar-task-check">
-                <img src="assets/images/check.svg" alt="check task button">
-            </button>
-            <button class="sidebar-task-edit">
-                <img src="assets/images/edit.svg" alt="edit task button">
-            </button>
-            <button class="sidebar-task-delete">
-                <img src="assets/images/delete.svg" alt="delete task button">
-            </button>
-        </div>
-    </div>
-``` -->
+</div>    
+
+```

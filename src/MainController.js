@@ -31,7 +31,8 @@ class MainController {
         this.stateManager.addTask(2, "Code for fun", "Here's a description", "medium", "2023-01-02");
         this.stateManager.checkTask(0, 2);
         console.log(this.stateManager);
-
+        
+        this.domManipulator.renderStaticSidebar();
         this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
     };
 };

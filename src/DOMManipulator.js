@@ -4,6 +4,10 @@ import priorityIcon from "./assets/images/priority.svg";
 import editTaskIcon from "./assets/images/edit.svg";
 import deleteTaskIcon from "./assets/images/delete.svg";
 import checkTaskIcon from "./assets/images/check.svg";
+import inboxPageIcon from "./assets/images/inbox.svg";
+import todayPageIcon from "./assets/images/today.svg";
+import completedPageIcon from "./assets/images/completed.svg";
+import expandTaskIcon from "./assets/images/arrow-down.svg";
 
 export { DOMManipulator };
 
@@ -17,7 +21,9 @@ class DOMManipulator {
 
     //Methods list
     setEventListenersManager() { };
+    renderStaticSidebar() { };
     renderSidebarProjects() { };
+    renderMainProjectPage() { }
     showCheckTask() { };
     renderAddProjectModal() { };
     renderAddTaskModal() { };
@@ -27,6 +33,52 @@ class DOMManipulator {
 
     setEventListenersManager(eventListenersManager) {
         this.eventListenersManager = eventListenersManager;
+    };
+
+    renderStaticSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const logo = document.createElement("p");
+        logo.classList.add("logo");
+        logo.textContent = "LOGO";
+        const menu = document.createElement("div");
+        menu.classList.add("menu");
+        const inbox = document.createElement("button");
+        inbox.classList.add("inbox");
+        const inboxIcon = document.createElement("img");
+        inboxIcon.src = inboxPageIcon;
+        inboxIcon.alt = "inbox button";
+        const inboxP = document.createElement("p");
+        inboxP.textContent = "Inbox";
+        const today = document.createElement("button");
+        today.classList.add("today");
+        const todayIcon = document.createElement("img");
+        todayIcon.src = todayPageIcon;
+        todayIcon.alt = "today button";
+        const todayP = document.createElement("p");
+        todayP.textContent = "Today";
+        const completed = document.createElement("button");
+        completed.classList.add("completed");
+        const completedIcon = document.createElement("img");
+        completedIcon.src = completedPageIcon;
+        completedIcon.alt = "completed button";
+        const completedP = document.createElement("p");
+        completedP.textContent = "Completed";
+        const projectsList = document.createElement("div");
+        projectsList.classList.add("projects-list");
+
+        inbox.appendChild(inboxIcon);
+        inbox.appendChild(inboxP);
+        today.appendChild(todayIcon);
+        today.appendChild(todayP);
+        completed.appendChild(completedIcon);
+        completed.appendChild(completedP);
+
+        menu.appendChild(inbox);
+        menu.appendChild(today);
+        menu.appendChild(completed);
+        sidebar.appendChild(logo);
+        sidebar.appendChild(menu);
+        sidebar.appendChild(projectsList);
     };
 
     renderSidebarProjects(projectsArray) {
@@ -126,6 +178,123 @@ class DOMManipulator {
         this.eventListenersManager.addSidebarEventListeners();
 
     };
+
+    renderMainProjectPage(Project) {
+        const mainPage = document.querySelector(".main-page");
+        mainPage.innerHTML = "";
+
+        const titleBar = document.createElement("div");
+        titleBar.classList.add("title-bar");
+        const titleBarName = document.createElement("p");
+        titleBarName.textContent = Project.projectName;
+        const titleBarEdit = document.createElement("button");
+        titleBarEdit.classList.add("title-bar-edit");
+        const titleBarEditImg = document.createElement("img");
+        titleBarEditImg.src = editTaskIcon;
+        titleBarEditImg.alt = "edit project button";
+        const titleBarDelete = document.createElement("button");
+        titleBarDelete.classList.add("title-bar-delete");
+        const titleBarDeleteImg = document.createElement("img");
+        titleBarDeleteImg.src = deleteTaskIcon;
+        titleBarDeleteImg.alt = "delete project button";
+
+        titleBar.appendChild(titleBarName);
+        titleBarEdit.appendChild(titleBarEditImg);
+        titleBarDelete.appendChild(titleBarDeleteImg);
+        titleBar.appendChild(titleBarEdit);
+        titleBar.appendChild(titleBarDelete);
+        mainPage.appendChild(titleBar);
+
+        const bulletBoard = document.createElement("div");
+        bulletBoard.classList.add("bullet-board");
+
+        Project.tasks.forEach((task, taskIndex) => {
+            const mainTask = document.createElement("div");
+            mainTask.classList.add("main-task");
+            mainTask.dataset.taskIndex = taskIndex;
+
+            const taskHeader = document.createElement("div");
+            taskHeader.classList.add("task-header");
+            const taskTop = document.createElement("div");
+            taskTop.classList.add("task-top");
+            const taskPriority = document.createElement("div");
+            taskPriority.classList.add("task-priority");
+            taskPriority.dataset.taskPriority = task.taskPriority;
+            taskPriority.dataset.isCheck = task.isCompleted;
+            const taskPriorityImg = document.createElement("img");
+            taskPriorityImg.src = priorityIcon;
+            taskPriorityImg.alt = "priority color";
+            const taskTitle = document.createElement("p");
+            taskTitle.classList.add("task-name");
+            taskTitle.dataset.isCheck = task.isCompleted;
+            taskTitle.textContent = task.taskName;
+            const taskExpDate = document.createElement("div");
+            taskExpDate.classList.add("task-date");
+            taskExpDate.textContent = task.taskDate;
+            taskPriority.appendChild(taskPriorityImg);
+            taskTop.appendChild(taskPriority);
+            taskTop.appendChild(taskTitle);
+            taskHeader.appendChild(taskTop);
+            taskHeader.appendChild(taskExpDate);
+
+            mainTask.appendChild(taskHeader);
+
+            const taskDescription = document.createElement("div");
+            taskDescription.classList.add("task-description");
+            taskDescription.textContent = task.taskDescription;
+
+            mainTask.appendChild(taskDescription);
+
+            const taskExpand = document.createElement("button");
+            taskExpand.classList.add("task-expand");
+            taskExpand.dataset.taskIndex = taskIndex;
+            const taskExpandImg = document.createElement("img");
+            taskExpandImg.src = expandTaskIcon;
+            taskExpandImg.alt = "expand task button";
+            taskExpand.appendChild(taskExpandImg);
+
+            mainTask.appendChild(taskExpand);
+
+            const taskButtons = document.createElement("div");
+            taskButtons.classList.add("task-buttons");
+
+            const taskDelete = document.createElement("button");
+            taskDelete.classList.add("task-delete");
+            taskDelete.dataset.taskIndex = taskIndex;
+            const taskDeleteImg = document.createElement("img");
+            taskDeleteImg.src = deleteTaskIcon;
+            taskDeleteImg.alt = "delete task button";
+            taskDelete.appendChild(taskDeleteImg);
+            taskButtons.appendChild(taskDelete);
+
+            const taskEdit = document.createElement("button");
+            taskEdit.classList.add("task-edit");
+            taskEdit.dataset.taskIndex = taskIndex;
+            const taskEditImg = document.createElement("img");
+            taskEditImg.src = editTaskIcon;
+            taskEditImg.alt = "edit task button";
+            taskEdit.appendChild(taskEditImg);
+            taskButtons.appendChild(taskEdit);
+
+            const taskCheck = document.createElement("button");
+            taskCheck.classList.add("task-check");
+            taskCheck.dataset.taskIndex = taskIndex;
+            const taskCheckImg = document.createElement("img");
+            taskCheckImg.src = checkTaskIcon;
+            taskCheckImg.alt = "check task button";
+            taskCheck.appendChild(taskCheckImg);
+            taskButtons.appendChild(taskCheck);
+
+            mainTask.appendChild(taskButtons);
+
+            bulletBoard.appendChild(mainTask);
+        });
+
+        mainPage.appendChild(bulletBoard);
+
+        this.eventListenersManager.addMainpageEventListeners();
+
+    }
 
     showCheckTask(projectIndex, taskIndex) {
 
