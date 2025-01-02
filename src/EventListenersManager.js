@@ -14,6 +14,7 @@ class EventListenersManager {
     addProjectModalListeners() { };
     addTaskModalListeners() { };
     editTaskModalListeners() { };
+    editProjectModalListeners() { };
 
     // Add project, Open project, Add task, Check task, Edit task and Delete task.
     addSidebarEventListeners() {
@@ -28,7 +29,7 @@ class EventListenersManager {
         const openProjectPageButton = document.querySelectorAll(".sidebar-project-name");
         openProjectPageButton.forEach((button, index) => {
             button.addEventListener("click", () => {
-                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index));
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
             });
         });
 
@@ -48,7 +49,6 @@ class EventListenersManager {
                 const projectIndex = button.closest(".sidebar-project").dataset.projectIndex;
 
                 this.stateManager.checkTask(projectIndex, taskIndex);
-                console.log(this.stateManager);
                 this.domManipulator.showCheckTask(projectIndex, taskIndex);
             });
         });
@@ -74,13 +74,75 @@ class EventListenersManager {
 
                 this.stateManager.deleteTask(projectIndex, taskIndex);
                 this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
             });
         });
     };
 
     //TODO
     // Edit project, Delete project, Delete task, Edit task, Check task, Expand task
-    addMainpageEventListeners() { 
+    addMainpageEventListeners(projectIndex) {
+
+        // Calls DOMManipulator method to show a modal to edit project name
+        const editProjectButton = document.querySelector(".title-bar-edit");
+        editProjectButton.addEventListener("click", () => {
+            this.domManipulator.renderEditProjectModal(projectIndex, this.stateManager.getAllProjects());
+        });
+
+        //TODO
+        // Calls StateManager to delete project and DOMManipulator to render next project in projectList and update sidebar
+        const deleteProjectButton = document.querySelector(".title-bar-delete");
+        deleteProjectButton.addEventListener("click", () => {
+            const index =deleteProjectButton.closest(".title-bar").dataset.projectIndex;
+            this.stateManager.deleteProject(index);
+            this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+            if (this.stateManager.getAllProjects().length === 0){
+                ////////////////////    RENDER INBOX PAGE ////////////////////// TODO
+            }else{
+                if (this.stateManager.getProjectByIndex(index)){
+                    this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
+                }else{
+                    this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index-1), index-1);
+                }
+            }
+        });
+
+        // Calls StateManager to delete task and DOMManipulator to update sidebar and mainpage
+        const deleteTaskButton = document.querySelectorAll(".task-delete")
+        deleteTaskButton.forEach((button, index) => {
+            button.addEventListener("click", () => {
+                this.stateManager.deleteTask(projectIndex, index);
+                this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
+            });
+        });
+
+        // Calls DOMManipulator method to show a modal to edit a task
+        const editTaskButton = document.querySelectorAll(".task-edit");
+        editTaskButton.forEach((button, index) => {
+            button.addEventListener("click", () => {
+                this.domManipulator.renderEditTaskModal(projectIndex, index, this.stateManager.getAllProjects());
+            });
+        });
+
+        // Calls StateManager method to check the task and calls DOMManipulator method to update the check mark
+        const checkTaskButton = document.querySelectorAll(".task-check");
+        checkTaskButton.forEach((button, index) => {
+            button.addEventListener("click", () => {
+                this.stateManager.checkTask(projectIndex, index);
+                this.domManipulator.showCheckTask(projectIndex, index);
+            });
+        });
+
+        const expandTaskButton = document.querySelectorAll(".task-expand");
+        expandTaskButton.forEach((button, index) => {
+            button.addEventListener("click", () => {
+                const task = document.querySelector(`.main-task[data-task-index="${index}"]`);
+                const img = document.querySelector(`.task-expand[data-task-index="${index}"] > img`);
+                task.classList.toggle("expanded");
+                img.classList.toggle("expanded");
+            });
+        });            
 
     };
 
@@ -138,13 +200,24 @@ class EventListenersManager {
             this.stateManager.editTask(projectIndex, taskIndex, taskName, taskDescription, taskPriority, taskDate);
             this.domManipulator.removeModal(modal);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-            console.log(this.stateManager);
+            this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
         });
 
         modal.addEventListener("click", (e) => {
             if (e.target === modal) {
                 this.domManipulator.removeModal(modal);
             };
+        });
+    };
+
+    editProjectModalListeners(modal, projectIndex) {
+        const editProjectButton = modal.querySelector("#editProjectButton");
+        editProjectButton.addEventListener("click", () => {
+            const projectName = modal.querySelector("#projectNameInput").value.trim();
+            this.stateManager.editProject(projectIndex, projectName);
+            this.domManipulator.removeModal(modal);
+            this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+            this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
         });
     };
 

@@ -28,6 +28,7 @@ class DOMManipulator {
     renderAddProjectModal() { };
     renderAddTaskModal() { };
     renderEditTaskModal() { };
+    renderEditProjectModal() { };
 
     removeModal() { };
 
@@ -148,11 +149,11 @@ class DOMManipulator {
                 sidebarTaskCheckImg.src = checkTaskIcon;
                 sidebarTaskCheckImg.alt = "check task button";
                 sidebarTaskCheckImg.dataset.taskCheck = task.isCompleted;
-                const sidebarTaskEdit = document.createElement("button");
-                sidebarTaskEdit.classList.add("sidebar-task-edit");
-                const sidebarTaskEditImg = document.createElement("img");
-                sidebarTaskEditImg.src = editTaskIcon;
-                sidebarTaskEditImg.alt = "edit task button";
+                // const sidebarTaskEdit = document.createElement("button");
+                // sidebarTaskEdit.classList.add("sidebar-task-edit");
+                // const sidebarTaskEditImg = document.createElement("img");
+                // sidebarTaskEditImg.src = editTaskIcon;
+                // sidebarTaskEditImg.alt = "edit task button";
                 const sidebarTaskDelete = document.createElement("button");
                 sidebarTaskDelete.classList.add("sidebar-task-delete");
                 const sidebarTaskDeleteImg = document.createElement("img");
@@ -164,8 +165,8 @@ class DOMManipulator {
                 sidebarTask.appendChild(sidebarTaskName);
                 sidebarTaskCheck.appendChild(sidebarTaskCheckImg);
                 sidebarTask.appendChild(sidebarTaskCheck);
-                sidebarTaskEdit.appendChild(sidebarTaskEditImg);
-                sidebarTask.appendChild(sidebarTaskEdit);
+                // sidebarTaskEdit.appendChild(sidebarTaskEditImg);
+                // sidebarTask.appendChild(sidebarTaskEdit);
                 sidebarTaskDelete.appendChild(sidebarTaskDeleteImg);
                 sidebarTask.appendChild(sidebarTaskDelete);
                 sidebarProject.appendChild(sidebarTask);
@@ -179,12 +180,13 @@ class DOMManipulator {
 
     };
 
-    renderMainProjectPage(Project) {
+    renderMainProjectPage(Project, projectIndex) {
         const mainPage = document.querySelector(".main-page");
         mainPage.innerHTML = "";
 
         const titleBar = document.createElement("div");
         titleBar.classList.add("title-bar");
+        titleBar.dataset.projectIndex = projectIndex;
         const titleBarName = document.createElement("p");
         titleBarName.textContent = Project.projectName;
         const titleBarEdit = document.createElement("button");
@@ -219,9 +221,9 @@ class DOMManipulator {
             taskTop.classList.add("task-top");
             const taskPriority = document.createElement("div");
             taskPriority.classList.add("task-priority");
-            taskPriority.dataset.taskPriority = task.taskPriority;
-            taskPriority.dataset.isCheck = task.isCompleted;
             const taskPriorityImg = document.createElement("img");
+            taskPriorityImg.dataset.taskPriority = task.taskPriority;
+            taskPriorityImg.dataset.isCheck = task.isCompleted;
             taskPriorityImg.src = priorityIcon;
             taskPriorityImg.alt = "priority color";
             const taskTitle = document.createElement("p");
@@ -280,6 +282,7 @@ class DOMManipulator {
             taskCheck.classList.add("task-check");
             taskCheck.dataset.taskIndex = taskIndex;
             const taskCheckImg = document.createElement("img");
+            taskCheckImg.dataset.taskCheck = task.isCompleted;
             taskCheckImg.src = checkTaskIcon;
             taskCheckImg.alt = "check task button";
             taskCheck.appendChild(taskCheckImg);
@@ -292,7 +295,7 @@ class DOMManipulator {
 
         mainPage.appendChild(bulletBoard);
 
-        this.eventListenersManager.addMainpageEventListeners();
+        this.eventListenersManager.addMainpageEventListeners(projectIndex);
 
     }
 
@@ -305,17 +308,34 @@ class DOMManipulator {
         const checkImgElement = taskElement.querySelector(".sidebar-task-check > img");
         const taskNameElement = taskElement.querySelector(".sidebar-task-name");
         const taskPriorityElement = taskElement.querySelector(".sidebar-task-priority > img");
-
         checkImgElement.dataset.taskCheck = checkImgElement.dataset.taskCheck === "false" ? "true" : "false";
         taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
         taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
+
+        
+
+        const bulletBoard = document.querySelector(".bullet-board");
+
+        if (bulletBoard !== null) {
+            const titleProjectElement = document.querySelector(".title-bar");
+            const titleProjectIndex =   titleProjectElement.dataset.projectIndex;
+            if (titleProjectIndex == projectIndex) {                                // Unfortunately the == is to account for the index sometimes being a string and sometimes an int, but it should overall work
+                const mainTask = bulletBoard.querySelector(`.main-task[data-task-index="${taskIndex}"]`);
+                const taskPriorityImg = mainTask.querySelector(".task-priority > img");
+                const taskNameElement = mainTask.querySelector(".task-name");
+                const taskCheckImg = mainTask.querySelector(".task-check > img");
+                taskPriorityImg.dataset.isCheck = taskPriorityImg.dataset.isCheck === "false" ? "true" : "false";
+                taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
+                taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
+            };            
+        };
     };
 
     renderAddProjectModal() {
         const modal = document.createElement("div");
         modal.classList.add("modal");
 
-        modal.innerHTML = `
+        modal.innerHTML =   `
                             <div class="modal-content">
                                 <input type="text" id="projectNameInput" placeholder="Enter project name" />
                                 <button id="addProjectButton">Add</button>
@@ -380,6 +400,20 @@ class DOMManipulator {
         this.eventListenersManager.editTaskModalListeners(modal, projectIndex, taskIndex);
 
     };
+
+    renderEditProjectModal(projectIndex, projectsArray) {
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+        modal.innerHTML =   `
+                            <div class="modal-content">
+                                <input type="text" id="projectNameInput" value="${projectsArray[projectIndex].projectName}" />
+                                <button id="editProjectButton">Edit</button>
+                            </div>
+                            `;
+        document.body.appendChild(modal);
+
+        this.eventListenersManager.editProjectModalListeners(modal, projectIndex);
+    }
 
     removeModal(modal) {
         modal.remove();
