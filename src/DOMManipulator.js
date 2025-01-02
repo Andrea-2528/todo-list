@@ -8,6 +8,7 @@ import inboxPageIcon from "./assets/images/inbox.svg";
 import todayPageIcon from "./assets/images/today.svg";
 import completedPageIcon from "./assets/images/completed.svg";
 import expandTaskIcon from "./assets/images/arrow-down.svg";
+import { format } from 'date-fns';
 
 export { DOMManipulator };
 
@@ -232,7 +233,7 @@ class DOMManipulator {
             taskTitle.textContent = task.taskName;
             const taskExpDate = document.createElement("div");
             taskExpDate.classList.add("task-date");
-            taskExpDate.textContent = task.taskDate;
+            taskExpDate.textContent = format(task.taskDate, 'd MMM, y');
             taskPriority.appendChild(taskPriorityImg);
             taskTop.appendChild(taskPriority);
             taskTop.appendChild(taskTitle);
@@ -378,6 +379,8 @@ class DOMManipulator {
         const modal = document.createElement("div");
         modal.classList.add("modal");
 
+        const date = format(projectsArray[projectIndex].tasks[taskIndex].taskDate, 'yyyy-MM-dd');
+
         modal.innerHTML = `
                             <div class="modal-content">
                                 <input type="text" id="taskNameInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskName}" />
@@ -391,7 +394,7 @@ class DOMManipulator {
                                     <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
                                     <label for="priorityHigh">High</label>
                                 </div>
-                                <input type="date" id="taskDateInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskDate}" />
+                                <input type="date" id="taskDateInput" value="${date}"/>
                                 <button id="editTaskButton">Edit</button>
                             </div>
                             `;
