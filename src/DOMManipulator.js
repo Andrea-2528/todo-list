@@ -364,7 +364,7 @@ class DOMManipulator {
                                     <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
                                     <label for="priorityHigh">High</label>
                                 </div>
-                                <input type="text" id="taskDateInput" placeholder="Enter task date" />
+                                <input type="date" id="taskDateInput" placeholder="Enter task date" />
                                 <button id="addTaskButton">Add</button>
                             </div>
                             `;
@@ -391,7 +391,7 @@ class DOMManipulator {
                                     <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
                                     <label for="priorityHigh">High</label>
                                 </div>
-                                <input type="text" id="taskDateInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskDate}" />
+                                <input type="date" id="taskDateInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskDate}" />
                                 <button id="editTaskButton">Edit</button>
                             </div>
                             `;

@@ -1,3 +1,4 @@
+import { format, parse } from 'date-fns';
 export { Task, Project, ProjectList };
 
 // The here defined classes are used to store the data of trask and projects,
@@ -8,7 +9,7 @@ class Task {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskPriority = taskPriority;
-        this.taskDate = taskDate;
+        this.taskDate = format(parse(taskDate, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd');
         this.isCompleted = false;
     };
 };
