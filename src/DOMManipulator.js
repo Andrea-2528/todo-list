@@ -33,6 +33,7 @@ class DOMManipulator {
     renderInboxPage() { };
     renderTodayPage() { };
     renderCompletedPage() { };
+    createMainTask() { };
 
     removeModal() { };
 
@@ -84,6 +85,9 @@ class DOMManipulator {
         sidebar.appendChild(logo);
         sidebar.appendChild(menu);
         sidebar.appendChild(projectsList);
+
+        this.eventListenersManager.addStaticSidebarEventListeners();
+
     };
 
     renderSidebarProjects(projectsArray) {
@@ -186,6 +190,7 @@ class DOMManipulator {
 
     renderMainProjectPage(Project, projectIndex) {
         const mainPage = document.querySelector(".main-page");
+        mainPage.dataset.mainContent = "project-page"
         mainPage.innerHTML = "";
 
         const titleBar = document.createElement("div");
@@ -215,84 +220,7 @@ class DOMManipulator {
         bulletBoard.classList.add("bullet-board");
 
         Project.tasks.forEach((task, taskIndex) => {
-            const mainTask = document.createElement("div");
-            mainTask.classList.add("main-task");
-            mainTask.dataset.taskIndex = taskIndex;
-
-            const taskHeader = document.createElement("div");
-            taskHeader.classList.add("task-header");
-            const taskTop = document.createElement("div");
-            taskTop.classList.add("task-top");
-            const taskPriority = document.createElement("div");
-            taskPriority.classList.add("task-priority");
-            const taskPriorityImg = document.createElement("img");
-            taskPriorityImg.dataset.taskPriority = task.taskPriority;
-            taskPriorityImg.dataset.isCheck = task.isCompleted;
-            taskPriorityImg.src = priorityIcon;
-            taskPriorityImg.alt = "priority color";
-            const taskTitle = document.createElement("p");
-            taskTitle.classList.add("task-name");
-            taskTitle.dataset.isCheck = task.isCompleted;
-            taskTitle.textContent = task.taskName;
-            const taskExpDate = document.createElement("div");
-            taskExpDate.classList.add("task-date");
-            taskExpDate.textContent = format(task.taskDate, 'd MMM, y');
-            taskPriority.appendChild(taskPriorityImg);
-            taskTop.appendChild(taskPriority);
-            taskTop.appendChild(taskTitle);
-            taskHeader.appendChild(taskTop);
-            taskHeader.appendChild(taskExpDate);
-
-            mainTask.appendChild(taskHeader);
-
-            const taskDescription = document.createElement("div");
-            taskDescription.classList.add("task-description");
-            taskDescription.textContent = task.taskDescription;
-
-            mainTask.appendChild(taskDescription);
-
-            const taskExpand = document.createElement("button");
-            taskExpand.classList.add("task-expand");
-            taskExpand.dataset.taskIndex = taskIndex;
-            const taskExpandImg = document.createElement("img");
-            taskExpandImg.src = expandTaskIcon;
-            taskExpandImg.alt = "expand task button";
-            taskExpand.appendChild(taskExpandImg);
-
-            mainTask.appendChild(taskExpand);
-
-            const taskButtons = document.createElement("div");
-            taskButtons.classList.add("task-buttons");
-
-            const taskDelete = document.createElement("button");
-            taskDelete.classList.add("task-delete");
-            taskDelete.dataset.taskIndex = taskIndex;
-            const taskDeleteImg = document.createElement("img");
-            taskDeleteImg.src = deleteTaskIcon;
-            taskDeleteImg.alt = "delete task button";
-            taskDelete.appendChild(taskDeleteImg);
-            taskButtons.appendChild(taskDelete);
-
-            const taskEdit = document.createElement("button");
-            taskEdit.classList.add("task-edit");
-            taskEdit.dataset.taskIndex = taskIndex;
-            const taskEditImg = document.createElement("img");
-            taskEditImg.src = editTaskIcon;
-            taskEditImg.alt = "edit task button";
-            taskEdit.appendChild(taskEditImg);
-            taskButtons.appendChild(taskEdit);
-
-            const taskCheck = document.createElement("button");
-            taskCheck.classList.add("task-check");
-            taskCheck.dataset.taskIndex = taskIndex;
-            const taskCheckImg = document.createElement("img");
-            taskCheckImg.dataset.taskCheck = task.isCompleted;
-            taskCheckImg.src = checkTaskIcon;
-            taskCheckImg.alt = "check task button";
-            taskCheck.appendChild(taskCheckImg);
-            taskButtons.appendChild(taskCheck);
-
-            mainTask.appendChild(taskButtons);
+            const mainTask = this.createMainTask(task, taskIndex);
 
             bulletBoard.appendChild(mainTask);
         });
@@ -316,13 +244,13 @@ class DOMManipulator {
         taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
         taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
 
-        
+
 
         const bulletBoard = document.querySelector(".bullet-board");
 
         if (bulletBoard !== null) {
             const titleProjectElement = document.querySelector(".title-bar");
-            const titleProjectIndex =   titleProjectElement.dataset.projectIndex;
+            const titleProjectIndex = titleProjectElement.dataset.projectIndex;
             if (titleProjectIndex == projectIndex) {                                // Unfortunately the == is to account for the index sometimes being a string and sometimes an int, but it should overall work
                 const mainTask = bulletBoard.querySelector(`.main-task[data-task-index="${taskIndex}"]`);
                 const taskPriorityImg = mainTask.querySelector(".task-priority > img");
@@ -331,7 +259,7 @@ class DOMManipulator {
                 taskPriorityImg.dataset.isCheck = taskPriorityImg.dataset.isCheck === "false" ? "true" : "false";
                 taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
                 taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
-            };            
+            };
         };
     };
 
@@ -339,7 +267,7 @@ class DOMManipulator {
         const modal = document.createElement("div");
         modal.classList.add("modal");
 
-        modal.innerHTML =   `
+        modal.innerHTML = `
                             <div class="modal-content">
                                 <input type="text" id="projectNameInput" placeholder="Enter project name" />
                                 <button id="addProjectButton">Add</button>
@@ -410,7 +338,7 @@ class DOMManipulator {
     renderEditProjectModal(projectIndex, projectsArray) {
         const modal = document.createElement("div");
         modal.classList.add("modal");
-        modal.innerHTML =   `
+        modal.innerHTML = `
                             <div class="modal-content">
                                 <input type="text" id="projectNameInput" value="${projectsArray[projectIndex].projectName}" />
                                 <button id="editProjectButton">Edit</button>
@@ -421,20 +349,136 @@ class DOMManipulator {
         this.eventListenersManager.editProjectModalListeners(modal, projectIndex);
     };
 
-    renderInboxPage() {
-        
+    renderInboxPage(tasks) {
+        const mainPage = document.querySelector(".main-page");
+        mainPage.dataset.mainContent = "inbox-page";
+        mainPage.innerHTML = "";
+
+        if (tasks.length === 0) {
+            const emptyPageMessage = document.createElement("p");
+            emptyPageMessage.classList.add("empty-page-message");
+            emptyPageMessage.textContent = "No tasks found :)";
+            mainPage.appendChild(emptyPageMessage);
+            return;
+        };
+
+        let uniqueDays = [];
+        for (const task of tasks) {
+            const taskDate = format(task.taskDate, 'yyyy-MM-dd');
+            if (!uniqueDays.includes(taskDate)) {
+                uniqueDays.push(taskDate);
+            };
+        };
+
+        console.log(uniqueDays);
+
+        // In each iteration it creates a new day-tasks-container
+        for (let i = 0; i < uniqueDays.length; i++) {
+            const dayTasksContainer = document.createElement("div");
+            dayTasksContainer.classList.add("day-tasks-container");
+            dayTasksContainer.dataset.taskDate = uniqueDays[i];
+            const dayDate = document.createElement("div");
+            dayDate.classList.add("day-date");
+            const paraDate = document.createElement("p");
+            paraDate.textContent = format(uniqueDays[i], 'd MMM, y');
+            dayDate.appendChild(paraDate);
+            dayTasksContainer.appendChild(dayDate);
+            const dayTasks = document.createElement("div");
+            dayTasks.classList.add("day-tasks");
+
+            for (let j = 0; j < tasks.length; j++) {
+                if (format(tasks[j].taskDate, 'yyyy-MM-dd') === uniqueDays[i]) {
+                    const mainTask = this.createMainTask(tasks[j], j);
+                    dayTasks.appendChild(mainTask);
+                };
+            };
+
+            dayTasksContainer.appendChild(dayTasks);
+            mainPage.appendChild(dayTasksContainer);
+        };
     };
 
-    renderTodayPage() {
+    renderTodayPage(tasks) {
 
     };
 
-    renderCompletedPage() {
+    renderCompletedPage(tasks) {
 
     };
 
     removeModal(modal) {
         modal.remove();
     };
+
+    createMainTask(task, taskIndex) {
+        const mainTask = document.createElement("div");
+        mainTask.classList.add("main-task");
+        mainTask.dataset.taskIndex = taskIndex;
+        const taskHeader = document.createElement("div");
+        taskHeader.classList.add("task-header");
+        const taskTop = document.createElement("div");
+        taskTop.classList.add("task-top");
+        const taskPriority = document.createElement("div");
+        taskPriority.classList.add("task-priority");
+        const taskPriorityImg = document.createElement("img");
+        taskPriorityImg.dataset.taskPriority = task.taskPriority;
+        taskPriorityImg.dataset.isCheck = task.isCompleted;
+        taskPriorityImg.src = priorityIcon;
+        taskPriorityImg.alt = "priority color";
+        const taskTitle = document.createElement("p");
+        taskTitle.classList.add("task-name");
+        taskTitle.dataset.isCheck = task.isCompleted;
+        taskTitle.textContent = task.taskName;
+        const taskExpDate = document.createElement("div");
+        taskExpDate.classList.add("task-date");
+        taskExpDate.textContent = "";
+        taskPriority.appendChild(taskPriorityImg);
+        taskTop.appendChild(taskPriority);
+        taskTop.appendChild(taskTitle);
+        taskHeader.appendChild(taskTop);
+        taskHeader.appendChild(taskExpDate);
+        mainTask.appendChild(taskHeader);
+        const taskDescription = document.createElement("div");
+        taskDescription.classList.add("task-description");
+        taskDescription.textContent = task.taskDescription;
+        mainTask.appendChild(taskDescription);
+        const taskExpand = document.createElement("button");
+        taskExpand.classList.add("task-expand");
+        taskExpand.dataset.taskIndex = taskIndex;
+        const taskExpandImg = document.createElement("img");
+        taskExpandImg.src = expandTaskIcon;
+        taskExpandImg.alt = "expand task button";
+        taskExpand.appendChild(taskExpandImg);
+        mainTask.appendChild(taskExpand);
+        const taskButtons = document.createElement("div");
+        taskButtons.classList.add("task-buttons");
+        const taskDelete = document.createElement("button");
+        taskDelete.classList.add("task-delete");
+        taskDelete.dataset.taskIndex = taskIndex;
+        const taskDeleteImg = document.createElement("img");
+        taskDeleteImg.src = deleteTaskIcon;
+        taskDeleteImg.alt = "delete task button";
+        taskDelete.appendChild(taskDeleteImg);
+        taskButtons.appendChild(taskDelete);
+        const taskEdit = document.createElement("button");
+        taskEdit.classList.add("task-edit");
+        taskEdit.dataset.taskIndex = taskIndex;
+        const taskEditImg = document.createElement("img");
+        taskEditImg.src = editTaskIcon;
+        taskEditImg.alt = "edit task button";
+        taskEdit.appendChild(taskEditImg);
+        taskButtons.appendChild(taskEdit);
+        const taskCheck = document.createElement("button");
+        taskCheck.classList.add("task-check");
+        taskCheck.dataset.taskIndex = taskIndex;
+        const taskCheckImg = document.createElement("img");
+        taskCheckImg.dataset.taskCheck = task.isCompleted;
+        taskCheckImg.src = checkTaskIcon;
+        taskCheckImg.alt = "check task button";
+        taskCheck.appendChild(taskCheckImg);
+        taskButtons.appendChild(taskCheck);
+        mainTask.appendChild(taskButtons);
+        return mainTask;
+    }
 
 };

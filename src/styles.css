@@ -266,7 +266,7 @@ button {
 
 /* PROJECT MAIN PAGE */
 
-.main-page {
+.main-page[data-main-content="project-page"] {
   display: grid;
   grid-template-rows: 126px 8fr;
 }

@@ -24,11 +24,11 @@ class MainController {
         this.stateManager.addTask(0, "Check Inventory", "Here's a description", "low", "2023-01-01");
         this.stateManager.addTask(0, "Prepare meeting", "Here's a description", "medium", "2023-01-02");
         this.stateManager.addTask(0, "Do actual work", "Here's a description", "high", "2023-01-03");
-        this.stateManager.addTask(1, "Clean bedroom", "Here's a description", "medium", "2023-01-01");
-        this.stateManager.addTask(1, "Buy groceries", "Here's a description", "high", "2023-01-02");
-        this.stateManager.addTask(1, "Change light bulb", "Here's a description", "low", "2023-01-03");
-        this.stateManager.addTask(2, "Practice guitar", "Here's a description", "low", "2023-01-01");
-        this.stateManager.addTask(2, "Code for fun", "Here's a description", "medium", "2023-01-02");
+        this.stateManager.addTask(1, "Clean bedroom", "Here's a description", "medium", "2023-02-01");
+        this.stateManager.addTask(1, "Buy groceries", "Here's a description", "high", "2023-01-04");
+        this.stateManager.addTask(1, "Change light bulb", "Here's a description", "low", "2023-04-03");
+        this.stateManager.addTask(2, "Practice guitar", "Here's a description", "low", "2023-10-12");
+        this.stateManager.addTask(2, "Code for fun", "Here's a description", "medium", "2023-02-02");
         this.stateManager.checkTask(0, 2);
         console.log(this.stateManager);
         

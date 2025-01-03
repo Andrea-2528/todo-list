@@ -1,3 +1,4 @@
+import { parse } from 'date-fns';
 export { EventListenersManager };
 
 // The EventListenersManager has methods to attach event listeners to the DOM
@@ -18,14 +19,12 @@ class EventListenersManager {
 
     // TODO
     // Load inbox, today or completed
-    // Add project, Open project, Add task, Check task, Edit task and Delete task.
-    addSidebarEventListeners() {
-
-        // TODO
+    addStaticSidebarEventListeners() {
+        
         // Calls DOMManipulator method to render the inbox page
         const inboxButton = document.querySelector(".inbox");
         inboxButton.addEventListener("click", () => {
-            this.domManipulator.renderInboxPage();                              //TODO
+            this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()));
         });
 
         // TODO
@@ -41,6 +40,11 @@ class EventListenersManager {
         completedButton.addEventListener("click", () => {
             this.domManipulator.renderCompletedPage();                          //TODO
         });
+    };
+
+
+    // Add project, Open project, Add task, Check task, Edit task and Delete task.
+    addSidebarEventListeners() {
 
         // Calls DOMManipulator method to show a modal to insert project name
         const addProjectButton = document.querySelector(".add-project");
@@ -116,16 +120,16 @@ class EventListenersManager {
         // Calls StateManager to delete project and DOMManipulator to render next project in projectList and update sidebar
         const deleteProjectButton = document.querySelector(".title-bar-delete");
         deleteProjectButton.addEventListener("click", () => {
-            const index =deleteProjectButton.closest(".title-bar").dataset.projectIndex;
+            const index = deleteProjectButton.closest(".title-bar").dataset.projectIndex;
             this.stateManager.deleteProject(index);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-            if (this.stateManager.getAllProjects().length === 0){
+            if (this.stateManager.getAllProjects().length === 0) {
                 ////////////////////    RENDER INBOX PAGE ////////////////////// TODO
-            }else{
-                if (this.stateManager.getProjectByIndex(index)){
+            } else {
+                if (this.stateManager.getProjectByIndex(index)) {
                     this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
-                }else{
-                    this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index-1), index-1);
+                } else {
+                    this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index - 1), index - 1);
                 }
             }
         });
@@ -165,7 +169,7 @@ class EventListenersManager {
                 task.classList.toggle("expanded");
                 img.classList.toggle("expanded");
             });
-        });            
+        });
 
     };
 
@@ -218,7 +222,8 @@ class EventListenersManager {
             const taskName = modal.querySelector("#taskNameInput").value.trim();
             const taskDescription = modal.querySelector("#taskDescriptionInput").value.trim();
             const taskPriority = modal.querySelector('input[name="taskPriority"]:checked')?.value || "low";
-            const taskDate = modal.querySelector("#taskDateInput").value.trim();
+            const taskDateString = modal.querySelector("#taskDateInput").value.trim();
+            const taskDate = parse(taskDateString, 'yyyy-MM-dd', new Date());
 
             this.stateManager.editTask(projectIndex, taskIndex, taskName, taskDescription, taskPriority, taskDate);
             this.domManipulator.removeModal(modal);
