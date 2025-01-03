@@ -10,6 +10,8 @@ class EventListenersManager {
         this.domManipulator = domManipulator;
     };
 
+    addStaticSidebarEventListeners() { };
+    addInboxTodayCompletedPageListeners() { };
     addSidebarEventListeners() { };
     addMainpageEventListeners() { };
     addProjectModalListeners() { };
@@ -17,7 +19,6 @@ class EventListenersManager {
     editTaskModalListeners() { };
     editProjectModalListeners() { };
 
-    // TODO
     // Load inbox, today or completed
     addStaticSidebarEventListeners() {
 
@@ -27,23 +28,21 @@ class EventListenersManager {
             this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
         });
 
-        // TODO
         // Calls DOMManipulator method to render the today page
         const todayButton = document.querySelector(".today");
         todayButton.addEventListener("click", () => {
-            this.domManipulator.renderTodayPage();                              //TODO
+            this.domManipulator.renderTodayPage(this.stateManager.getTodayTasks(), this.stateManager.getAllProjects());
         });
 
-        // TODO
         // Calls DOMManipulator method to render the completed page
         const completedButton = document.querySelector(".completed");
         completedButton.addEventListener("click", () => {
-            this.domManipulator.renderCompletedPage();                          //TODO
+            this.domManipulator.renderCompletedPage(this.stateManager.getCompletedTasks(), this.stateManager.getAllProjects());
         });
     };
 
     // Delete task, Edit task, Check task, Expand task
-    addInboxPageListeners() {
+    addInboxTodayCompletedPageListeners() {
 
         // Calls StateManager to delete task and DOMManipulator to update sidebar and mainpage
         const deleteTaskButton = document.querySelectorAll(".task-delete")
@@ -53,7 +52,18 @@ class EventListenersManager {
                 const projectIndex = button.closest(".main-task").dataset.projectIndex;
                 this.stateManager.deleteTask(projectIndex, taskIndex);
                 this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+                const page = document.querySelector(".main-page");
+                switch (page.dataset.mainContent) {
+                    case "inbox-page":
+                        this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+                        break;
+                    case "today-page":
+                        this.domManipulator.renderTodayPage(this.stateManager.getTodayTasks(), this.stateManager.getAllProjects());
+                        break;
+                    case "completed-page":
+                        this.domManipulator.renderCompletedPage(this.stateManager.getCompletedTasks(), this.stateManager.getAllProjects());
+                        break;
+                };
             });
         });
 
@@ -91,7 +101,6 @@ class EventListenersManager {
         });
 
     };
-
 
     // Add project, Open project, Add task, Check task, Edit task and Delete task.
     addSidebarEventListeners() {
@@ -156,7 +165,6 @@ class EventListenersManager {
         });
     };
 
-    //TODO
     // Edit project, Delete project, Delete task, Edit task, Check task, Expand task
     addMainpageEventListeners(projectIndex) {
 
@@ -166,7 +174,6 @@ class EventListenersManager {
             this.domManipulator.renderEditProjectModal(projectIndex, this.stateManager.getAllProjects());
         });
 
-        //TODO
         // Calls StateManager to delete project and DOMManipulator to render next project in projectList and update sidebar
         const deleteProjectButton = document.querySelector(".title-bar-delete");
         deleteProjectButton.addEventListener("click", () => {
@@ -174,7 +181,7 @@ class EventListenersManager {
             this.stateManager.deleteProject(index);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
             if (this.stateManager.getAllProjects().length === 0) {
-                ////////////////////    RENDER INBOX PAGE ////////////////////// TODO
+                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
             } else {
                 if (this.stateManager.getProjectByIndex(index)) {
                     this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
@@ -211,6 +218,7 @@ class EventListenersManager {
             });
         });
 
+        // Modifies the class of selected task to show expanded task
         const expandTaskButton = document.querySelectorAll(".task-expand");
         expandTaskButton.forEach((button, index) => {
             button.addEventListener("click", () => {
@@ -281,8 +289,8 @@ class EventListenersManager {
             const mainPage = document.querySelector(".main-page");
             if (mainPage.dataset.mainContent === "inbox-page") {
                 this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
-            }else if (mainPage.dataset.mainContent === "project-page") {
-                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);                
+            } else if (mainPage.dataset.mainContent === "project-page") {
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
             }
         });
 

@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 export { DOMManipulator };
 
 // This class is responsible for rendering the DOM whenever a change occurs
-// in the data or when the user asks for a different view.
+// in the data or when the user asks for a different page.
 
 class DOMManipulator {
     constructor() {
@@ -33,9 +33,8 @@ class DOMManipulator {
     renderInboxPage() { };
     renderTodayPage() { };
     renderCompletedPage() { };
-    createMainTask() { };
-
     removeModal() { };
+    createMainTask() { };
 
     setEventListenersManager(eventListenersManager) {
         this.eventListenersManager = eventListenersManager;
@@ -264,9 +263,9 @@ class DOMManipulator {
 
         // Makes the icon and the text change data-attribute and therefore style in the Inbox and Today pages IF they're open
         const mainPage = document.querySelector(".main-page");
-        if (mainPage.dataset.mainContent === "inbox-page" || mainPage.dataset.mainContent === "today-page") {
+        if (mainPage.dataset.mainContent === "inbox-page" || mainPage.dataset.mainContent === "today-page" || mainPage.dataset.mainContent === "completed-page") {
             const mainTask = document.querySelector(`.main-task[data-project-index="${projectIndex}"][data-task-index="${taskIndex}"]`);
-            if (mainTask !== null){
+            if (mainTask !== null) {
                 const taskPriorityImg = mainTask.querySelector(".task-priority > img");
                 const taskNameElement = mainTask.querySelector(".task-name");
                 const taskCheckImg = mainTask.querySelector(".task-check > img");
@@ -408,11 +407,11 @@ class DOMManipulator {
                     // Search orderedTask[j] in projectsArray and save relative projectIndex and taskIndex
                     for (let k = 0; k < projectsArray.length; k++) {
                         for (let l = 0; l < projectsArray[k].tasks.length; l++) {
-                            if (orderedTasks[j].taskName === projectsArray[k].tasks[l].taskName) {
+                            if ((orderedTasks[j].taskName + orderedTasks[j].taskDescription) === (projectsArray[k].tasks[l].taskName + projectsArray[k].tasks[l].taskDescription)) {
                                 projectIndex = k;
                                 taskIndex = l;
                             };
-                        };                                           
+                        };
                     };
                     const mainTask = this.createMainTask(orderedTasks[j], taskIndex, projectIndex);
                     dayTasks.appendChild(mainTask);
@@ -423,15 +422,100 @@ class DOMManipulator {
             mainPage.appendChild(dayTasksContainer);
         };
 
-        this.eventListenersManager.addInboxPageListeners();
+        this.eventListenersManager.addInboxTodayCompletedPageListeners();
     };
 
-    renderTodayPage(tasks) {
-        // TODO
+    renderTodayPage(todayTasks, projectsArray) {
+        const mainPage = document.querySelector(".main-page");
+        mainPage.dataset.mainContent = "today-page";
+        mainPage.innerHTML = "";
+
+        console.log(todayTasks);
+
+        // Remove elements from todayTasks that are already completed
+        todayTasks = todayTasks.filter(task => task.isCompleted === false);
+
+        console.log(todayTasks);
+
+        if (todayTasks.length === 0) {
+            const emptyPageMessage = document.createElement("p");
+            emptyPageMessage.classList.add("empty-page-message");
+            emptyPageMessage.textContent = "No tasks today :)";
+            mainPage.appendChild(emptyPageMessage);
+            return;
+        };
+
+        // Render top of the page (today's date)
+        const todayDateBox = document.createElement("div");
+        todayDateBox.classList.add("day-date");
+        const todayDate = document.createElement("p");
+        todayDate.textContent = format(new Date(), 'd MMM, y');
+        todayDateBox.appendChild(todayDate);
+        mainPage.appendChild(todayDateBox);
+
+        // Render tasks
+        let projectIndex;
+        let taskIndex;
+        for (let i = 0; i < todayTasks.length; i++) {
+            // Search todayTasks[i] in projectsArray and save relative projectIndex and taskIndex
+            for (let j = 0; j < projectsArray.length; j++) {
+                for (let k = 0; k < projectsArray[j].tasks.length; k++) {
+                    if ((todayTasks[i].taskName + todayTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
+                        projectIndex = j;
+                        taskIndex = k;
+                    };
+                };
+            };
+            const mainTask = this.createMainTask(todayTasks[i], taskIndex, projectIndex);
+            mainPage.appendChild(mainTask);
+        };
+
+        this.eventListenersManager.addInboxTodayCompletedPageListeners();
+
     };
 
-    renderCompletedPage(tasks) {
-        // TODO
+    renderCompletedPage(completedTasks, projectsArray) {
+        const mainPage = document.querySelector(".main-page");
+        mainPage.dataset.mainContent = "completed-page";
+        mainPage.innerHTML = "";
+
+        console.log(completedTasks);
+
+        if (completedTasks.length === 0) {
+            const emptyPageMessage = document.createElement("p");
+            emptyPageMessage.classList.add("empty-page-message");
+            emptyPageMessage.textContent = "No task completed :(";
+            mainPage.appendChild(emptyPageMessage);
+            return;
+        };
+
+        // Render top of the page (Completed title)
+        const titleBox = document.createElement("div");
+        titleBox.classList.add("day-date");
+        const title = document.createElement("p");
+        title.textContent = "Completed";
+        titleBox.appendChild(title);
+        mainPage.appendChild(titleBox);
+
+        // Render tasks
+        let projectIndex;
+        let taskIndex;
+        for (let i = 0; i < completedTasks.length; i++) {
+            // Search completedTasks[i] in projectsArray and save relative projectIndex and taskIndex
+            for (let j = 0; j < projectsArray.length; j++) {
+                for (let k = 0; k < projectsArray[j].tasks.length; k++) {
+                    if ((completedTasks[i].taskName + completedTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
+                        projectIndex = j;
+                        taskIndex = k;
+                    };
+                };
+            };
+            const mainTask = this.createMainTask(completedTasks[i], taskIndex, projectIndex);
+            mainPage.appendChild(mainTask);
+        };
+
+        this.eventListenersManager.addInboxTodayCompletedPageListeners();
+
     };
 
     removeModal(modal) {
