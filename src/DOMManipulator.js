@@ -30,6 +30,9 @@ class DOMManipulator {
     renderAddTaskModal() { };
     renderEditTaskModal() { };
     renderEditProjectModal() { };
+    renderInboxPage() { };
+    renderTodayPage() { };
+    renderCompletedPage() { };
 
     removeModal() { };
 
@@ -416,7 +419,19 @@ class DOMManipulator {
         document.body.appendChild(modal);
 
         this.eventListenersManager.editProjectModalListeners(modal, projectIndex);
-    }
+    };
+
+    renderInboxPage() {
+        
+    };
+
+    renderTodayPage() {
+
+    };
+
+    renderCompletedPage() {
+
+    };
 
     removeModal(modal) {
         modal.remove();

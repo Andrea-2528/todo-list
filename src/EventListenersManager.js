@@ -16,8 +16,31 @@ class EventListenersManager {
     editTaskModalListeners() { };
     editProjectModalListeners() { };
 
+    // TODO
+    // Load inbox, today or completed
     // Add project, Open project, Add task, Check task, Edit task and Delete task.
     addSidebarEventListeners() {
+
+        // TODO
+        // Calls DOMManipulator method to render the inbox page
+        const inboxButton = document.querySelector(".inbox");
+        inboxButton.addEventListener("click", () => {
+            this.domManipulator.renderInboxPage();                              //TODO
+        });
+
+        // TODO
+        // Calls DOMManipulator method to render the today page
+        const todayButton = document.querySelector(".today");
+        todayButton.addEventListener("click", () => {
+            this.domManipulator.renderTodayPage();                              //TODO
+        });
+
+        // TODO
+        // Calls DOMManipulator method to render the completed page
+        const completedButton = document.querySelector(".completed");
+        completedButton.addEventListener("click", () => {
+            this.domManipulator.renderCompletedPage();                          //TODO
+        });
 
         // Calls DOMManipulator method to show a modal to insert project name
         const addProjectButton = document.querySelector(".add-project");

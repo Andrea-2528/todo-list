@@ -21,6 +21,11 @@ class StateManager {
     checkTask() { };
     getTaskByIndex() { };
     getAllTasks() { };
+    getCompletedTasks() { };
+    getNotCompletedTasks() { };
+    orderEarliestLatest() { };
+    orderLatestEarliest() { };
+    getTodayTasks() { };
 
     addProject(projectName) {
         this.projectList.addProject(projectName);
@@ -54,5 +59,53 @@ class StateManager {
     };
     getAllTasks(projectIndex) {
         return this.projectList.projects[projectIndex].getAllTasks();
+    };
+
+    getCompletedTasks() {
+        const completedTasks = [];
+        this.projectList.projects.forEach(project => {
+            project.tasks.forEach(task => {
+                if (task.isCompleted) {
+                    completedTasks.push(task);
+                };
+            });
+        });
+        return completedTasks;
+    };
+
+    getNotCompletedTasks() {
+        const notCompletedTasks = [];
+        this.projectList.projects.forEach(project => {
+            project.tasks.forEach(task => {
+                if (!task.isCompleted) {
+                    notCompletedTasks.push(task);
+                };
+            });
+        });
+        return notCompletedTasks;
+    };
+
+    orderEarliestLatest(tasks) {
+        return tasks.sort((a, b) => a.taskDate - b.taskDate);
+    };
+
+    orderLatestEarliest(tasks) {
+        return tasks.sort((a, b) => b.taskDate - a.taskDate);
+    };
+
+    getTodayTasks() {
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+        const todayTasks = [];
+        this.projectList.projects.forEach(project => {
+            project.tasks.forEach(task => {
+                if (task.taskDate >= startOfToday && task.taskDate < endOfToday) {
+                    todayTasks.push(task);
+                };
+            });
+        });
+        return todayTasks;
     };
 };
