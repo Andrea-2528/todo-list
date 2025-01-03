@@ -220,7 +220,7 @@ class DOMManipulator {
         bulletBoard.classList.add("bullet-board");
 
         Project.tasks.forEach((task, taskIndex) => {
-            const mainTask = this.createMainTask(task, taskIndex);
+            const mainTask = this.createMainTask(task, taskIndex, projectIndex);
 
             bulletBoard.appendChild(mainTask);
         });
@@ -236,7 +236,7 @@ class DOMManipulator {
         const projectElement = document.querySelector(`.sidebar-project[data-project-index="${projectIndex}"]`);
         const taskElement = projectElement.querySelector(`.sidebar-task[data-task-index="${taskIndex}"]`);
 
-        // Makes the icons and text change data-attribute and therefore style
+        // Makes the icons and text change data-attribute and therefore style in the sidebar
         const checkImgElement = taskElement.querySelector(".sidebar-task-check > img");
         const taskNameElement = taskElement.querySelector(".sidebar-task-name");
         const taskPriorityElement = taskElement.querySelector(".sidebar-task-priority > img");
@@ -245,7 +245,7 @@ class DOMManipulator {
         taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
 
 
-
+        // Makes the icons and text change data-attribute and therefore style in the project page IF the relative project page is open
         const bulletBoard = document.querySelector(".bullet-board");
 
         if (bulletBoard !== null) {
@@ -261,6 +261,21 @@ class DOMManipulator {
                 taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
             };
         };
+
+        // Makes the icon and the text change data-attribute and therefore style in the Inbox and Today pages IF they're open
+        const mainPage = document.querySelector(".main-page");
+        if (mainPage.dataset.mainContent === "inbox-page" || mainPage.dataset.mainContent === "today-page") {
+            const mainTask = document.querySelector(`.main-task[data-project-index="${projectIndex}"][data-task-index="${taskIndex}"]`);
+            if (mainTask !== null){
+                const taskPriorityImg = mainTask.querySelector(".task-priority > img");
+                const taskNameElement = mainTask.querySelector(".task-name");
+                const taskCheckImg = mainTask.querySelector(".task-check > img");
+                taskPriorityImg.dataset.isCheck = taskPriorityImg.dataset.isCheck === "false" ? "true" : "false";
+                taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
+                taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
+            };
+        };
+
     };
 
     renderAddProjectModal() {
@@ -349,12 +364,12 @@ class DOMManipulator {
         this.eventListenersManager.editProjectModalListeners(modal, projectIndex);
     };
 
-    renderInboxPage(tasks) {
+    renderInboxPage(orderedTasks, projectsArray) {
         const mainPage = document.querySelector(".main-page");
         mainPage.dataset.mainContent = "inbox-page";
         mainPage.innerHTML = "";
 
-        if (tasks.length === 0) {
+        if (orderedTasks.length === 0) {
             const emptyPageMessage = document.createElement("p");
             emptyPageMessage.classList.add("empty-page-message");
             emptyPageMessage.textContent = "No tasks found :)";
@@ -363,7 +378,7 @@ class DOMManipulator {
         };
 
         let uniqueDays = [];
-        for (const task of tasks) {
+        for (const task of orderedTasks) {
             const taskDate = format(task.taskDate, 'yyyy-MM-dd');
             if (!uniqueDays.includes(taskDate)) {
                 uniqueDays.push(taskDate);
@@ -372,6 +387,8 @@ class DOMManipulator {
 
         console.log(uniqueDays);
 
+        let projectIndex;
+        let taskIndex;
         // In each iteration it creates a new day-tasks-container
         for (let i = 0; i < uniqueDays.length; i++) {
             const dayTasksContainer = document.createElement("div");
@@ -386,9 +403,18 @@ class DOMManipulator {
             const dayTasks = document.createElement("div");
             dayTasks.classList.add("day-tasks");
 
-            for (let j = 0; j < tasks.length; j++) {
-                if (format(tasks[j].taskDate, 'yyyy-MM-dd') === uniqueDays[i]) {
-                    const mainTask = this.createMainTask(tasks[j], j);
+            for (let j = 0; j < orderedTasks.length; j++) {
+                if (format(orderedTasks[j].taskDate, 'yyyy-MM-dd') === uniqueDays[i]) {
+                    // Search orderedTask[j] in projectsArray and save relative projectIndex and taskIndex
+                    for (let k = 0; k < projectsArray.length; k++) {
+                        for (let l = 0; l < projectsArray[k].tasks.length; l++) {
+                            if (orderedTasks[j].taskName === projectsArray[k].tasks[l].taskName) {
+                                projectIndex = k;
+                                taskIndex = l;
+                            };
+                        };                                           
+                    };
+                    const mainTask = this.createMainTask(orderedTasks[j], taskIndex, projectIndex);
                     dayTasks.appendChild(mainTask);
                 };
             };
@@ -396,24 +422,27 @@ class DOMManipulator {
             dayTasksContainer.appendChild(dayTasks);
             mainPage.appendChild(dayTasksContainer);
         };
+
+        this.eventListenersManager.addInboxPageListeners();
     };
 
     renderTodayPage(tasks) {
-
+        // TODO
     };
 
     renderCompletedPage(tasks) {
-
+        // TODO
     };
 
     removeModal(modal) {
         modal.remove();
     };
 
-    createMainTask(task, taskIndex) {
+    createMainTask(task, taskIndex, projectIndex) {
         const mainTask = document.createElement("div");
         mainTask.classList.add("main-task");
         mainTask.dataset.taskIndex = taskIndex;
+        mainTask.dataset.projectIndex = projectIndex;
         const taskHeader = document.createElement("div");
         taskHeader.classList.add("task-header");
         const taskTop = document.createElement("div");
@@ -431,7 +460,7 @@ class DOMManipulator {
         taskTitle.textContent = task.taskName;
         const taskExpDate = document.createElement("div");
         taskExpDate.classList.add("task-date");
-        taskExpDate.textContent = "";
+        taskExpDate.textContent = format(task.taskDate, 'd MMM, y');
         taskPriority.appendChild(taskPriorityImg);
         taskTop.appendChild(taskPriority);
         taskTop.appendChild(taskTitle);

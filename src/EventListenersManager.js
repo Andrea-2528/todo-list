@@ -20,11 +20,11 @@ class EventListenersManager {
     // TODO
     // Load inbox, today or completed
     addStaticSidebarEventListeners() {
-        
+
         // Calls DOMManipulator method to render the inbox page
         const inboxButton = document.querySelector(".inbox");
         inboxButton.addEventListener("click", () => {
-            this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()));
+            this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
         });
 
         // TODO
@@ -40,6 +40,56 @@ class EventListenersManager {
         completedButton.addEventListener("click", () => {
             this.domManipulator.renderCompletedPage();                          //TODO
         });
+    };
+
+    // Delete task, Edit task, Check task, Expand task
+    addInboxPageListeners() {
+
+        // Calls StateManager to delete task and DOMManipulator to update sidebar and mainpage
+        const deleteTaskButton = document.querySelectorAll(".task-delete")
+        deleteTaskButton.forEach((button) => {
+            button.addEventListener("click", () => {
+                const taskIndex = button.dataset.taskIndex;
+                const projectIndex = button.closest(".main-task").dataset.projectIndex;
+                this.stateManager.deleteTask(projectIndex, taskIndex);
+                this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+            });
+        });
+
+        // Calls DOMManipulator method to show a modal to edit a task
+        const editTaskButton = document.querySelectorAll(".task-edit");
+        editTaskButton.forEach((button) => {
+            button.addEventListener("click", () => {
+                const taskIndex = button.dataset.taskIndex;
+                const projectIndex = button.closest(".main-task").dataset.projectIndex;
+                this.domManipulator.renderEditTaskModal(projectIndex, taskIndex, this.stateManager.getAllProjects());
+            });
+        });
+
+        // Calls StateManager method to check the task and calls DOMManipulator method to update the check mark
+        const checkTaskButton = document.querySelectorAll(".task-check");
+        checkTaskButton.forEach((button) => {
+            button.addEventListener("click", () => {
+                const taskIndex = button.dataset.taskIndex;
+                const projectIndex = button.closest(".main-task").dataset.projectIndex;
+                this.stateManager.checkTask(projectIndex, taskIndex);
+                this.domManipulator.showCheckTask(projectIndex, taskIndex);
+            });
+        });
+
+        const expandTaskButton = document.querySelectorAll(".task-expand");
+        expandTaskButton.forEach((button) => {
+            button.addEventListener("click", () => {
+                const taskIndex = button.dataset.taskIndex;
+                const projectIndex = button.closest(".main-task").dataset.projectIndex;
+                const task = document.querySelector(`.main-task[data-project-index="${projectIndex}"][data-task-index="${taskIndex}"]`);
+                const img = document.querySelector(`.task-expand[data-task-index="${taskIndex}"] > img`);
+                task.classList.toggle("expanded");
+                img.classList.toggle("expanded");
+            });
+        });
+
     };
 
 
@@ -228,7 +278,12 @@ class EventListenersManager {
             this.stateManager.editTask(projectIndex, taskIndex, taskName, taskDescription, taskPriority, taskDate);
             this.domManipulator.removeModal(modal);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-            this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
+            const mainPage = document.querySelector(".main-page");
+            if (mainPage.dataset.mainContent === "inbox-page") {
+                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+            }else if (mainPage.dataset.mainContent === "project-page") {
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);                
+            }
         });
 
         modal.addEventListener("click", (e) => {
