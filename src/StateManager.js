@@ -128,8 +128,7 @@ class StateManager {
             }))
         })));
         localStorage.setItem('todoData', serializedData);
-    }
-    
+    };
 
     loadFromLocalStorage() {
         const data = localStorage.getItem('todoData');
@@ -139,7 +138,7 @@ class StateManager {
                 // Add project through StateManager
                 this.addProject(projectData.projectName);
                 const projectIndex = this.projectList.projects.length - 1;
-    
+
                 projectData.tasks.forEach(taskData => {
                     // Use the date string directly
                     this.addTask(
@@ -156,9 +155,22 @@ class StateManager {
                 });
             });
         } else {
-            // Add a default project if no data exists
-            this.addProject("Default");
+            // Add a default projects if no data exists
+            this.addProject("Work");
+            this.addProject("Home");
+            this.addProject("Hobbies");
+            this.addTask(0, "Check Inventory", "Here's a description", "low", "2025-01-01");
+            this.addTask(0, "Prepare meeting", "Here's a description", "medium", "2025-01-02");
+            this.addTask(0, "Do actual work", "Here's a description", "high", "2025-01-03");
+            this.addTask(1, "Clean bedroom", "Here's a description", "medium", "2025-02-01");
+            this.addTask(1, "Buy groceries", "Here's a description", "high", "2025-01-04");
+            this.addTask(1, "Change light bulb", "Here's a description", "low", "2025-01-04");
+            this.addTask(2, "Practice guitar", "Here's a description", "low", "2025-02-02");
+            this.addTask(2, "Code for fun", "Here's a description", "medium", "2025-01-04");
+            this.checkTask(0, 2);
+            this.checkTask(1, 1);
+            this.checkTask(2, 0);
         }
-    }
+    };
 
 };

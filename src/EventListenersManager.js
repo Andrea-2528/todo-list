@@ -324,6 +324,7 @@ class EventListenersManager {
         });
     };
 
+    // This adds event listeners to the edit project modal
     editProjectModalListeners(modal, projectIndex) {
         const editProjectButton = modal.querySelector("#editProjectButton");
         editProjectButton.addEventListener("click", () => {
