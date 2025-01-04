@@ -5,7 +5,6 @@ This project is an interactive **TODO List Application** designed to help users 
 
 The application is built using **HTML**, **CSS**, and **JavaScript**, with modularized code to maintain scalability and readability. The project employs Webpack for bundling and module handling.
 
----
 
 ## Features
 1. **Task Features**
@@ -37,7 +36,6 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
    - Modals for adding and editing tasks/projects.
    - All functionality is synchronized between sidebar and main page.
 
----
 
 ## Application Structure
 
@@ -97,21 +95,6 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 
 ---
 
-### 3. **Frontend**
-
-#### `template.html`
-- The HTML structure provides a basic layout with sections for:
-  - Sidebar.
-  - Main content area.
-
-#### `styles.css`
-- Contains custom styles for:
-  - Sidebar and task/project layouts.
-  - Priority-based task styling.
-  - Modals and transitions.
-
----
-
 ### 3. **Build System**
 
 #### Webpack Configuration
@@ -123,8 +106,6 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 - `dev`: Start a development server.
 - `build`: Build the project for production.
 
----
-
 ## Installation and Setup
 
 ### Prerequisites
@@ -134,7 +115,6 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd todo-list-app
    ```
 
 2. Install dependencies:
@@ -152,8 +132,6 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
    npm run build
    ```
 
----
-
 ## Usage
 1. Open the application in your browser.
 2. Use the **sidebar** to navigate between:
@@ -161,50 +139,4 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
    - Today’s tasks.
    - Completed tasks.
    - Specific projects.
-3. Add, edit, or delete tasks and projects using the intuitive UI.
-
----
-
-## Technical Details
-
-### Modular Design
-- Each functionality is encapsulated in its own module to ensure separation of concerns and maintainability.
-
-### Persistent Storage
-- Tasks and projects are serialized into JSON and stored in `localStorage`.
-
-### Event-Driven Architecture
-- The `EventListenersManager` dynamically attaches event handlers to new DOM elements, ensuring smooth user interactions.
-
-### Styling
-- CSS Variables are used for theme consistency.
-- Includes a modern CSS reset for cross-browser compatibility.
-
----
-
-## Future Improvements
-- Implement user authentication to allow multiple users.
-- Integrate a database for more robust data storage.
-- Add drag-and-drop functionality for tasks and projects.
-- Enable task notifications/reminders.
-
----
-
-## Contributing
-We welcome contributions to improve this application! Follow these steps:
-1. Fork the repository.
-2. Create a new branch for your feature/bug fix.
-3. Submit a pull request.
-
----
-
-## License
-This project is licensed under the **ISC License**.
-
----
-
-## Acknowledgments
-- **date-fns**: For date manipulation.
-- **Webpack**: For module bundling.
-
----
+3. Add, edit, check or delete tasks and projects using the UI.
