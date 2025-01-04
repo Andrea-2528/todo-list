@@ -9,7 +9,7 @@ class Task {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskPriority = taskPriority;
-        this.taskDate = parse(taskDate, 'yyyy-MM-dd', new Date());
+        this.taskDate = taskDate ? parse(taskDate, 'yyyy-MM-dd', new Date()) : new Date();
         this.isCompleted = false;
     };
 };

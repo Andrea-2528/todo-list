@@ -298,6 +298,7 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 50%;
+  padding: 0.5rem;
   padding-left: 1rem;
 }
 
