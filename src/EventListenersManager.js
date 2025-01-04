@@ -10,6 +10,7 @@ class EventListenersManager {
         this.domManipulator = domManipulator;
     };
 
+    // Methods list
     addStaticSidebarEventListeners() { };
     addInboxTodayCompletedPageListeners() { };
     addSidebarEventListeners() { };
@@ -21,6 +22,16 @@ class EventListenersManager {
 
     // Load inbox, today or completed
     addStaticSidebarEventListeners() {
+
+        // When <button> inside .menu clicked, remove all .clicked classes from buttons
+        //  and add .clicked to the clicked button
+        // Also select all .sidebar-project and remove the .clicked class
+        const sidebarMenu = document.querySelector(".menu");
+        sidebarMenu.querySelectorAll("button").forEach((btn) => btn.addEventListener("click", () => {
+            sidebarMenu.querySelectorAll("button").forEach((btn) => btn.classList.remove("clicked"));
+            document.querySelectorAll(".sidebar-project").forEach((project) => project.classList.remove("clicked"));
+            btn.classList.add("clicked");
+        }));
 
         // Calls DOMManipulator method to render the inbox page
         const inboxButton = document.querySelector(".inbox");
@@ -116,6 +127,18 @@ class EventListenersManager {
         openProjectPageButton.forEach((button, index) => {
             button.addEventListener("click", () => {
                 this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
+            });
+        });
+
+        // When .sidebar-project-name is clicked, select all <button> inside .menu and remove the .clicked class,
+        // then select all .sidebar-project and remove the .clicked class,
+        // then select closest .sidebar-project and add the .clicked class
+        openProjectPageButton.forEach((button) => {
+            button.addEventListener("click", () => {
+                const sidebarMenu = document.querySelector(".menu");
+                sidebarMenu.querySelectorAll("button").forEach((btn) => btn.classList.remove("clicked"));
+                document.querySelectorAll(".sidebar-project").forEach((project) => project.classList.remove("clicked"));
+                button.closest(".sidebar-project").classList.add("clicked");
             });
         });
 

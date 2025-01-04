@@ -44,7 +44,7 @@ class DOMManipulator {
         const sidebar = document.querySelector(".sidebar");
         const logo = document.createElement("p");
         logo.classList.add("logo");
-        logo.textContent = "LOGO";
+        logo.textContent = "TODO";
         const menu = document.createElement("div");
         menu.classList.add("menu");
         const inbox = document.createElement("button");
@@ -191,42 +191,51 @@ class DOMManipulator {
         const mainPage = document.querySelector(".main-page");
         mainPage.dataset.mainContent = "project-page"
         mainPage.innerHTML = "";
+        mainPage.classList.add("hidden");
 
-        const titleBar = document.createElement("div");
-        titleBar.classList.add("title-bar");
-        titleBar.dataset.projectIndex = projectIndex;
-        const titleBarName = document.createElement("p");
-        titleBarName.textContent = Project.projectName;
-        const titleBarEdit = document.createElement("button");
-        titleBarEdit.classList.add("title-bar-edit");
-        const titleBarEditImg = document.createElement("img");
-        titleBarEditImg.src = editTaskIcon;
-        titleBarEditImg.alt = "edit project button";
-        const titleBarDelete = document.createElement("button");
-        titleBarDelete.classList.add("title-bar-delete");
-        const titleBarDeleteImg = document.createElement("img");
-        titleBarDeleteImg.src = deleteTaskIcon;
-        titleBarDeleteImg.alt = "delete project button";
+        setTimeout(() => {
 
-        titleBar.appendChild(titleBarName);
-        titleBarEdit.appendChild(titleBarEditImg);
-        titleBarDelete.appendChild(titleBarDeleteImg);
-        titleBar.appendChild(titleBarEdit);
-        titleBar.appendChild(titleBarDelete);
-        mainPage.appendChild(titleBar);
+            const titleBar = document.createElement("div");
+            titleBar.classList.add("title-bar");
+            titleBar.dataset.projectIndex = projectIndex;
+            const titleBarName = document.createElement("p");
+            titleBarName.textContent = Project.projectName;
+            const titleBarEdit = document.createElement("button");
+            titleBarEdit.classList.add("title-bar-edit");
+            const titleBarEditImg = document.createElement("img");
+            titleBarEditImg.src = editTaskIcon;
+            titleBarEditImg.alt = "edit project button";
+            const titleBarDelete = document.createElement("button");
+            titleBarDelete.classList.add("title-bar-delete");
+            const titleBarDeleteImg = document.createElement("img");
+            titleBarDeleteImg.src = deleteTaskIcon;
+            titleBarDeleteImg.alt = "delete project button";
 
-        const bulletBoard = document.createElement("div");
-        bulletBoard.classList.add("bullet-board");
+            titleBar.appendChild(titleBarName);
+            titleBarEdit.appendChild(titleBarEditImg);
+            titleBarDelete.appendChild(titleBarDeleteImg);
+            titleBar.appendChild(titleBarEdit);
+            titleBar.appendChild(titleBarDelete);
+            mainPage.appendChild(titleBar);
 
-        Project.tasks.forEach((task, taskIndex) => {
-            const mainTask = this.createMainTask(task, taskIndex, projectIndex);
+            const bulletBoard = document.createElement("div");
+            bulletBoard.classList.add("bullet-board");
 
-            bulletBoard.appendChild(mainTask);
-        });
+            Project.tasks.forEach((task, taskIndex) => {
+                const mainTask = this.createMainTask(task, taskIndex, projectIndex);
 
-        mainPage.appendChild(bulletBoard);
+                bulletBoard.appendChild(mainTask);
+            });
 
-        this.eventListenersManager.addMainpageEventListeners(projectIndex);
+            mainPage.appendChild(bulletBoard);
+
+            mainPage.classList.remove("hidden");
+
+            this.eventListenersManager.addMainpageEventListeners(projectIndex);
+
+        }, 300);
+
+ 
 
     }
 
@@ -244,10 +253,13 @@ class DOMManipulator {
         taskPriorityElement.dataset.isCheck = taskPriorityElement.dataset.isCheck === "false" ? "true" : "false";
 
 
-        // Makes the icons and text change data-attribute and therefore style in the project page IF the relative project page is open
         const bulletBoard = document.querySelector(".bullet-board");
+        const mainPage = document.querySelector(".main-page");
 
-        if (bulletBoard !== null) {
+        // Makes the icons and text change data-attribute and therefore style in the project page IF the relative project page is open
+
+
+        if (mainPage.dataset.mainContent === "project-page") {
             const titleProjectElement = document.querySelector(".title-bar");
             const titleProjectIndex = titleProjectElement.dataset.projectIndex;
             if (titleProjectIndex == projectIndex) {                                // Unfortunately the == is to account for the index sometimes being a string and sometimes an int, but it should overall work
@@ -258,11 +270,11 @@ class DOMManipulator {
                 taskPriorityImg.dataset.isCheck = taskPriorityImg.dataset.isCheck === "false" ? "true" : "false";
                 taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
                 taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
+                mainTask.dataset.isCheck = mainTask.dataset.isCheck === "false" ? "true" : "false";
             };
         };
 
-        // Makes the icon and the text change data-attribute and therefore style in the Inbox and Today pages IF they're open
-        const mainPage = document.querySelector(".main-page");
+        // Makes the icon and the text change data-attribute and therefore style in the Inbox, Today and Completed pages IF they're open        
         if (mainPage.dataset.mainContent === "inbox-page" || mainPage.dataset.mainContent === "today-page" || mainPage.dataset.mainContent === "completed-page") {
             const mainTask = document.querySelector(`.main-task[data-project-index="${projectIndex}"][data-task-index="${taskIndex}"]`);
             if (mainTask !== null) {
@@ -272,6 +284,7 @@ class DOMManipulator {
                 taskPriorityImg.dataset.isCheck = taskPriorityImg.dataset.isCheck === "false" ? "true" : "false";
                 taskNameElement.dataset.isCheck = taskNameElement.dataset.isCheck === "false" ? "true" : "false";
                 taskCheckImg.dataset.taskCheck = taskCheckImg.dataset.taskCheck === "false" ? "true" : "false";
+                mainTask.dataset.isCheck = mainTask.dataset.isCheck === "false" ? "true" : "false";
             };
         };
 
@@ -368,67 +381,78 @@ class DOMManipulator {
         mainPage.dataset.mainContent = "inbox-page";
         mainPage.innerHTML = "";
 
-        if (orderedTasks.length === 0) {
-            const emptyPageMessage = document.createElement("p");
-            emptyPageMessage.classList.add("empty-page-message");
-            emptyPageMessage.textContent = "No tasks found :)";
-            mainPage.appendChild(emptyPageMessage);
-            return;
-        };
+        mainPage.classList.add("hidden");
 
-        let uniqueDays = [];
-        for (const task of orderedTasks) {
-            const taskDate = format(task.taskDate, 'yyyy-MM-dd');
-            if (!uniqueDays.includes(taskDate)) {
-                uniqueDays.push(taskDate);
+
+        setTimeout(() => {
+
+            if (orderedTasks.length === 0) {
+                const emptyPageMessage = document.createElement("p");
+                emptyPageMessage.classList.add("empty-page-message");
+                emptyPageMessage.textContent = "No tasks found :)";
+                mainPage.appendChild(emptyPageMessage);
+                return;
             };
-        };
 
-        console.log(uniqueDays);
-
-        let projectIndex;
-        let taskIndex;
-        // In each iteration it creates a new day-tasks-container
-        for (let i = 0; i < uniqueDays.length; i++) {
-            const dayTasksContainer = document.createElement("div");
-            dayTasksContainer.classList.add("day-tasks-container");
-            dayTasksContainer.dataset.taskDate = uniqueDays[i];
-            const dayDate = document.createElement("div");
-            dayDate.classList.add("day-date");
-            const paraDate = document.createElement("p");
-            paraDate.textContent = format(uniqueDays[i], 'd MMM, y');
-            dayDate.appendChild(paraDate);
-            dayTasksContainer.appendChild(dayDate);
-            const dayTasks = document.createElement("div");
-            dayTasks.classList.add("day-tasks");
-
-            for (let j = 0; j < orderedTasks.length; j++) {
-                if (format(orderedTasks[j].taskDate, 'yyyy-MM-dd') === uniqueDays[i]) {
-                    // Search orderedTask[j] in projectsArray and save relative projectIndex and taskIndex
-                    for (let k = 0; k < projectsArray.length; k++) {
-                        for (let l = 0; l < projectsArray[k].tasks.length; l++) {
-                            if ((orderedTasks[j].taskName + orderedTasks[j].taskDescription) === (projectsArray[k].tasks[l].taskName + projectsArray[k].tasks[l].taskDescription)) {
-                                projectIndex = k;
-                                taskIndex = l;
-                            };
-                        };
-                    };
-                    const mainTask = this.createMainTask(orderedTasks[j], taskIndex, projectIndex);
-                    dayTasks.appendChild(mainTask);
+            let uniqueDays = [];
+            for (const task of orderedTasks) {
+                const taskDate = format(task.taskDate, 'yyyy-MM-dd');
+                if (!uniqueDays.includes(taskDate)) {
+                    uniqueDays.push(taskDate);
                 };
             };
 
-            dayTasksContainer.appendChild(dayTasks);
-            mainPage.appendChild(dayTasksContainer);
-        };
+            console.log(uniqueDays);
 
-        this.eventListenersManager.addInboxTodayCompletedPageListeners();
+            let projectIndex;
+            let taskIndex;
+            // In each iteration it creates a new day-tasks-container
+            for (let i = 0; i < uniqueDays.length; i++) {
+                const dayTasksContainer = document.createElement("div");
+                dayTasksContainer.classList.add("day-tasks-container");
+                dayTasksContainer.dataset.taskDate = uniqueDays[i];
+                const dayDate = document.createElement("div");
+                dayDate.classList.add("day-date");
+                const paraDate = document.createElement("p");
+                paraDate.textContent = format(uniqueDays[i], 'd MMM, y');
+                dayDate.appendChild(paraDate);
+                dayTasksContainer.appendChild(dayDate);
+                const dayTasks = document.createElement("div");
+                dayTasks.classList.add("day-tasks");
+
+                for (let j = 0; j < orderedTasks.length; j++) {
+                    if (format(orderedTasks[j].taskDate, 'yyyy-MM-dd') === uniqueDays[i]) {
+                        // Search orderedTask[j] in projectsArray and save relative projectIndex and taskIndex
+                        for (let k = 0; k < projectsArray.length; k++) {
+                            for (let l = 0; l < projectsArray[k].tasks.length; l++) {
+                                if ((orderedTasks[j].taskName + orderedTasks[j].taskDescription) === (projectsArray[k].tasks[l].taskName + projectsArray[k].tasks[l].taskDescription)) {
+                                    projectIndex = k;
+                                    taskIndex = l;
+                                };
+                            };
+                        };
+                        const mainTask = this.createMainTask(orderedTasks[j], taskIndex, projectIndex);
+                        dayTasks.appendChild(mainTask);
+                    };
+                };
+
+                dayTasksContainer.appendChild(dayTasks);
+                mainPage.appendChild(dayTasksContainer);
+            };
+
+            mainPage.classList.remove("hidden");
+            this.eventListenersManager.addInboxTodayCompletedPageListeners();
+
+        }, 300);
+
     };
 
     renderTodayPage(todayTasks, projectsArray) {
         const mainPage = document.querySelector(".main-page");
         mainPage.dataset.mainContent = "today-page";
         mainPage.innerHTML = "";
+
+        mainPage.classList.add("hidden");
 
         console.log(todayTasks);
 
@@ -437,40 +461,52 @@ class DOMManipulator {
 
         console.log(todayTasks);
 
-        if (todayTasks.length === 0) {
-            const emptyPageMessage = document.createElement("p");
-            emptyPageMessage.classList.add("empty-page-message");
-            emptyPageMessage.textContent = "No tasks today :)";
-            mainPage.appendChild(emptyPageMessage);
-            return;
-        };
+        setTimeout(() => {
 
-        // Render top of the page (today's date)
-        const todayDateBox = document.createElement("div");
-        todayDateBox.classList.add("day-date");
-        const todayDate = document.createElement("p");
-        todayDate.textContent = format(new Date(), 'd MMM, y');
-        todayDateBox.appendChild(todayDate);
-        mainPage.appendChild(todayDateBox);
+            if (todayTasks.length === 0) {
+                const emptyPageMessage = document.createElement("p");
+                emptyPageMessage.classList.add("empty-page-message");
+                emptyPageMessage.textContent = "No tasks today :)";
+                mainPage.appendChild(emptyPageMessage);
+                return;
+            };
 
-        // Render tasks
-        let projectIndex;
-        let taskIndex;
-        for (let i = 0; i < todayTasks.length; i++) {
-            // Search todayTasks[i] in projectsArray and save relative projectIndex and taskIndex
-            for (let j = 0; j < projectsArray.length; j++) {
-                for (let k = 0; k < projectsArray[j].tasks.length; k++) {
-                    if ((todayTasks[i].taskName + todayTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
-                        projectIndex = j;
-                        taskIndex = k;
+            // Render top of the page (today's date)
+            const todayDateBox = document.createElement("div");
+            todayDateBox.classList.add("day-date");
+            const todayDate = document.createElement("p");
+            todayDate.textContent = format(new Date(), 'd MMM, y');
+            todayDateBox.appendChild(todayDate);
+            mainPage.appendChild(todayDateBox);
+
+            // Render tasks
+            let projectIndex;
+            let taskIndex;
+            let bulletBoard = document.createElement("div");
+            bulletBoard.classList.add("bullet-board");
+
+            for (let i = 0; i < todayTasks.length; i++) {
+                // Search todayTasks[i] in projectsArray and save relative projectIndex and taskIndex
+                for (let j = 0; j < projectsArray.length; j++) {
+                    for (let k = 0; k < projectsArray[j].tasks.length; k++) {
+                        if ((todayTasks[i].taskName + todayTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
+                            projectIndex = j;
+                            taskIndex = k;
+                        };
                     };
                 };
+                const mainTask = this.createMainTask(todayTasks[i], taskIndex, projectIndex);
+                bulletBoard.appendChild(mainTask);
             };
-            const mainTask = this.createMainTask(todayTasks[i], taskIndex, projectIndex);
-            mainPage.appendChild(mainTask);
-        };
 
-        this.eventListenersManager.addInboxTodayCompletedPageListeners();
+            mainPage.appendChild(bulletBoard);
+
+            mainPage.classList.remove("hidden");
+            this.eventListenersManager.addInboxTodayCompletedPageListeners();
+
+        }, 300);
+
+
 
     };
 
@@ -479,42 +515,55 @@ class DOMManipulator {
         mainPage.dataset.mainContent = "completed-page";
         mainPage.innerHTML = "";
 
+        mainPage.classList.add("hidden");
+
         console.log(completedTasks);
 
-        if (completedTasks.length === 0) {
-            const emptyPageMessage = document.createElement("p");
-            emptyPageMessage.classList.add("empty-page-message");
-            emptyPageMessage.textContent = "No task completed :(";
-            mainPage.appendChild(emptyPageMessage);
-            return;
-        };
+        setTimeout(() => {
 
-        // Render top of the page (Completed title)
-        const titleBox = document.createElement("div");
-        titleBox.classList.add("day-date");
-        const title = document.createElement("p");
-        title.textContent = "Completed";
-        titleBox.appendChild(title);
-        mainPage.appendChild(titleBox);
+            if (completedTasks.length === 0) {
+                const emptyPageMessage = document.createElement("p");
+                emptyPageMessage.classList.add("empty-page-message");
+                emptyPageMessage.textContent = "No task completed :(";
+                mainPage.appendChild(emptyPageMessage);
+                return;
+            };
 
-        // Render tasks
-        let projectIndex;
-        let taskIndex;
-        for (let i = 0; i < completedTasks.length; i++) {
-            // Search completedTasks[i] in projectsArray and save relative projectIndex and taskIndex
-            for (let j = 0; j < projectsArray.length; j++) {
-                for (let k = 0; k < projectsArray[j].tasks.length; k++) {
-                    if ((completedTasks[i].taskName + completedTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
-                        projectIndex = j;
-                        taskIndex = k;
+            // Render top of the page (Completed title)
+            const titleBox = document.createElement("div");
+            titleBox.classList.add("day-date");
+            const title = document.createElement("p");
+            title.textContent = "Completed";
+            titleBox.appendChild(title);
+            mainPage.appendChild(titleBox);
+
+            // Render tasks
+            let projectIndex;
+            let taskIndex;
+            let bulletBoard = document.createElement("div");
+            bulletBoard.classList.add("bullet-board");
+            for (let i = 0; i < completedTasks.length; i++) {
+                // Search completedTasks[i] in projectsArray and save relative projectIndex and taskIndex
+                for (let j = 0; j < projectsArray.length; j++) {
+                    for (let k = 0; k < projectsArray[j].tasks.length; k++) {
+                        if ((completedTasks[i].taskName + completedTasks[i].taskDescription) === (projectsArray[j].tasks[k].taskName + projectsArray[j].tasks[k].taskDescription)) {
+                            projectIndex = j;
+                            taskIndex = k;
+                        };
                     };
                 };
+                const mainTask = this.createMainTask(completedTasks[i], taskIndex, projectIndex);
+                bulletBoard.appendChild(mainTask);
             };
-            const mainTask = this.createMainTask(completedTasks[i], taskIndex, projectIndex);
-            mainPage.appendChild(mainTask);
-        };
 
-        this.eventListenersManager.addInboxTodayCompletedPageListeners();
+            mainPage.appendChild(bulletBoard);
+
+            mainPage.classList.remove("hidden");
+            this.eventListenersManager.addInboxTodayCompletedPageListeners();
+
+        }, 300);
+
+
 
     };
 
@@ -527,6 +576,7 @@ class DOMManipulator {
         mainTask.classList.add("main-task");
         mainTask.dataset.taskIndex = taskIndex;
         mainTask.dataset.projectIndex = projectIndex;
+        mainTask.dataset.isCheck = task.isCompleted;
         const taskHeader = document.createElement("div");
         taskHeader.classList.add("task-header");
         const taskTop = document.createElement("div");
