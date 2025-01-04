@@ -1,28 +1,31 @@
 # TODO List Application
 
 ## Overview
-This project is a robust and interactive **TODO List Application** designed to help users efficiently manage their tasks and projects. It includes features like task prioritization, project categorization, and dynamic filtering of tasks based on their status and due dates.
+This project is an interactive **TODO List Application** designed to help users  manage their tasks and projects. It includes features like task prioritization, project categorization, and filtering of tasks based on their status and due dates.
 
 The application is built using **HTML**, **CSS**, and **JavaScript**, with modularized code to maintain scalability and readability. The project employs Webpack for bundling and module handling.
 
 ---
 
 ## Features
-1. **Task Management**
+1. **Task Features**
+   - Each task as a name, a description, a due date, and a priority level.
    - Add, edit, and delete tasks.
    - Mark tasks as completed.
    - Assign priority levels to tasks (low, medium, high).
    - Set due dates for tasks.
+   - Assign task to project.
 
 2. **Project Management**
+   - Each project has a name.
    - Create, edit, and delete projects.
    - Categorize tasks under specific projects.
    - View tasks grouped by projects.
 
 3. **Dynamic Filtering**
    - View tasks sorted by:
-     - Inbox (all incomplete tasks).
-     - Today (tasks due today).
+     - Inbox (all incomplete tasks ordered by date).
+     - Today (incomplete tasks due today).
      - Completed tasks.
 
 4. **Persistent State**
@@ -32,6 +35,7 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
    - Sidebar for project navigation.
    - Dynamic rendering of tasks and projects.
    - Modals for adding and editing tasks/projects.
+   - All functionality is synchronized between sidebar and main page.
 
 ---
 
@@ -40,7 +44,7 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 ### 1. **Core Components**
 
 #### `TaskManagement.js`
-- Contains three classes:
+  - Contains three classes:
   - **`Task`**: Represents an individual task.
   - **`Project`**: Represents a collection of tasks.
   - **`ProjectList`**: Manages a list of projects.
@@ -52,7 +56,7 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 
 #### `MainController.js`
 - The entry point for initializing the app.
-- Manages communication between the `StateManager`, `DOMManipulator`, and `EventListenersManager`.
+- Manages communication between the `StateManager`, `DOMManipulator`, and `EventListenersManager` classes by initializing them.
 
 #### `DOMManipulator.js`
 - Responsible for rendering the DOM dynamically based on the application's state.
@@ -63,8 +67,37 @@ The application is built using **HTML**, **CSS**, and **JavaScript**, with modul
 - Ensures interactive elements (e.g., buttons) trigger the appropriate actions.
 
 ---
+### 2. Structure
+```
+                                  [Index]
+                                     ^
+                                     |
+                                     |
+                            +------------------+
+                 ---------> |  MainController  |<-----------
+                |           +------------------+            |
+                |                    ^                      |
+                |                    |                      |
+        +----------------+           |                      |
+  ----> |  StateManager  |           |                      |
+ |      +----------------+           |                      |
+ |                     |             |                      |
+ |                     v             |                      |
++----------------+ +-----------------------+            +---------------------+
+| TaskManagement | | EventListenersManager |<---------->|   DOMManipulator    |
++----------------+ +-----------------------+            +---------------------+
+           ^                ^                               ^              ^
+           |                |                               |              |
+            --------        |      -------------------------               |
+                    |       |     |                                        |
+                    +-------------+                      +---------------------+
+                    |   date-fns  |                      |       Assets        |
+                    +-------------+                      +---------------------+
+```
 
-### 2. **Frontend**
+---
+
+### 3. **Frontend**
 
 #### `template.html`
 - The HTML structure provides a basic layout with sections for:
