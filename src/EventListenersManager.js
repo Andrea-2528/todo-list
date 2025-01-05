@@ -174,7 +174,7 @@ class EventListenersManager {
             });
         });
 
-        // Calls StateManager method to delete the task and calls DOMManipulator method to update the sidebar
+        // Calls StateManager method to delete the task and calls DOMManipulator method to update the sidebar, then re-render main page
         const deleteTaskButton = document.querySelectorAll(".sidebar-task-delete");
         deleteTaskButton.forEach((button) => {
             button.addEventListener("click", () => {
@@ -183,7 +183,44 @@ class EventListenersManager {
 
                 this.stateManager.deleteTask(projectIndex, taskIndex);
                 this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
-                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
+
+                // Use .main-page dataset for switch, inside each page IF -main-task has dataset equal to indexes, it re-renders
+                const page = document.querySelector(".main-page");
+                const mainTask = document.querySelectorAll(".main-task");
+                switch (page.dataset.mainContent) {
+                    case "project-page":                        
+                        mainTask.forEach((task) => {
+                            if (task.dataset.projectIndex === projectIndex && task.dataset.taskIndex === taskIndex) {
+                                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
+                            };
+                        })                        
+                        break;
+
+                    case "inbox-page":
+                        mainTask.forEach((task) => {
+                            if (task.dataset.projectIndex === projectIndex && task.dataset.taskIndex === taskIndex) {
+                                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+                            };
+                        })
+                        break;
+
+                    case "today-page":
+                        mainTask.forEach((task) => {
+                            if (task.dataset.projectIndex === projectIndex && task.dataset.taskIndex === taskIndex) {
+                                this.domManipulator.renderTodayPage(this.stateManager.getTodayTasks(), this.stateManager.getAllProjects());
+                            };
+                        })
+                        break;
+
+                    case "completed-page":
+                        mainTask.forEach((task) => {
+                            if (task.dataset.projectIndex === projectIndex && task.dataset.taskIndex === taskIndex) {
+                                this.domManipulator.renderCompletedPage(this.stateManager.getCompletedTasks(), this.stateManager.getAllProjects());
+                            };
+                        })
+                        break;
+                        
+                };
             });
         });
     };
@@ -285,6 +322,12 @@ class EventListenersManager {
             this.stateManager.addTask(index, taskName, taskDescription, taskPriority, taskDate);
             this.domManipulator.removeModal(modal);
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
+            const mainPage = document.querySelector(".main-page");
+            if (mainPage.dataset.mainContent === "inbox-page") {
+                this.domManipulator.renderInboxPage(this.stateManager.orderEarliestLatest(this.stateManager.getNotCompletedTasks()), this.stateManager.getAllProjects());
+            } else if (mainPage.dataset.mainContent === "project-page") {
+                this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(index), index);
+            }
 
         });
 

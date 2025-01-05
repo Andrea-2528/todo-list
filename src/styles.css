@@ -135,6 +135,9 @@ button {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);             /* To make it apply to entire page, parent has filter:blur(0px) for some reason */
+  color: var(--color-primary-text);
 }
 
 .modal.hidden {
@@ -143,16 +146,65 @@ button {
 
 .modal-content {
   position: relative;
-  top: -40px;
-  left: -20%;
+  top: -6rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+  gap: 2rem;
+  background: var(--color-secondary-background);
+  padding: 2rem;
+  border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 2px solid turquoise;
+  border: 2px solid var(--color-accent-primary);
+}
+
+.priority {
+  border: 2px solid var(--color-accent-primary);
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+#taskNameInput,
+#taskDescriptionInput,
+#projectNameInput {
+  margin-top: -1.2rem;
+  background-color: var(--color-accent-primary);
+  border: 2px solid var(--color-accent-primary);
+  border-radius: 20px;
+  padding: 1rem;
+  color: var(--color-secondary-background);
+  box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
+  resize: none;
+}
+
+#projectNameInput {
+  margin-top: 1rem;
+}
+
+#taskDateInput {
+  padding: 1rem;
+  border: 2px solid var(--color-accent-primary);
+  border-radius: 20px;
+  background-color: var(--color-accent-primary);
+  color: var(--color-secondary-background);
+  box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
+}
+
+#addTaskButton,
+#addProjectButton,
+#editTaskButton {
+  border-radius: 20px;
+  padding: 1rem;
+  background: var(--color-accent-primary);
+  color: var(--color-secondary-background);
+  box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
+}
+
+#addTaskButton:hover,
+#addProjectButton:hover,
+#editTaskButton:hover {
+  background: var(--gradient-color);
 }
 
 .main-grid {
@@ -161,9 +213,8 @@ button {
   grid-template-columns: 1fr 3fr;
   overflow: hidden;
   background-color: var(--color-primary-background);
+  filter: blur(0px);
 }
-
-/* SIDEBAR */
 
 .sidebar {
   background-color: var(--color-secondary-background);
@@ -181,6 +232,9 @@ button {
   align-self: center;
   font-size: 3.5rem;
   font-weight: 600;
+  background-image: var(--gradient-color);
+  color: transparent;
+  background-clip: text;
 }
 
 .menu {
@@ -239,6 +293,10 @@ button {
 .projects-title>p {
   font-size: 2rem;
   margin-right: 2rem;
+  padding: 1rem;
+  background-image: var(--gradient-color);
+  color: transparent;
+  background-clip: text;
 }
 
 .projects-title>button {
@@ -279,12 +337,17 @@ button {
   font-size: 1.5rem;
   width: 75%;
   padding: 1rem;
+  border-bottom: 2px solid var(--color-accent-primary);
+  border-radius: 0%;
   text-align: left;
   font-weight: 600;
+  transition: all 0.3s ease-in-out;
 }
 
 .sidebar-project-name:hover {
   color: var(--color-accent-primary);
+  border-bottom: 5px solid var(--color-accent-primary);
+  border-radius: 10%;
 }
 .sidebar-task {
   display: flex;
@@ -430,6 +493,7 @@ button {
 .main-task[data-is-check="true"] {
   background-color: transparent;
   border: 2px solid var(--color-secondary-text);
+  padding: 2px;
 }
 
 .main-task.expanded {
@@ -482,4 +546,20 @@ img.expanded {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+}
+
+.empty-page-message {
+  position: relative;
+  top: 14rem;
+  left: 8rem;
+  width: 40%;
+  padding: 2rem;
+  border: 2px solid var(--color-accent-primary);
+  border-radius: 20px;
+  box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 1);
+  font-size: 2rem;
+  font-weight: 600;
+  background-image: var(--gradient-color);
+  color: transparent;
+  background-clip: text;
 }

@@ -156,11 +156,6 @@ class DOMManipulator {
                 sidebarTaskCheckImg.src = checkTaskIcon;
                 sidebarTaskCheckImg.alt = "check task button";
                 sidebarTaskCheckImg.dataset.taskCheck = task.isCompleted;
-                // const sidebarTaskEdit = document.createElement("button");
-                // sidebarTaskEdit.classList.add("sidebar-task-edit");
-                // const sidebarTaskEditImg = document.createElement("img");
-                // sidebarTaskEditImg.src = editTaskIcon;
-                // sidebarTaskEditImg.alt = "edit task button";
                 const sidebarTaskDelete = document.createElement("button");
                 sidebarTaskDelete.classList.add("sidebar-task-delete");
                 const sidebarTaskDeleteImg = document.createElement("img");
@@ -172,8 +167,6 @@ class DOMManipulator {
                 sidebarTask.appendChild(sidebarTaskName);
                 sidebarTaskCheck.appendChild(sidebarTaskCheckImg);
                 sidebarTask.appendChild(sidebarTaskCheck);
-                // sidebarTaskEdit.appendChild(sidebarTaskEditImg);
-                // sidebarTask.appendChild(sidebarTaskEdit);
                 sidebarTaskDelete.appendChild(sidebarTaskDeleteImg);
                 sidebarTask.appendChild(sidebarTaskDelete);
                 sidebarProject.appendChild(sidebarTask);
@@ -235,7 +228,7 @@ class DOMManipulator {
 
         }, 300);
 
- 
+
 
     }
 
@@ -301,7 +294,9 @@ class DOMManipulator {
                             </div>
                             `;
 
-        document.body.appendChild(modal);
+        const mainGrid = document.querySelector(".main-grid");
+
+        mainGrid.appendChild(modal);
 
         this.eventListenersManager.addProjectModalListeners(modal);
     };
@@ -312,23 +307,31 @@ class DOMManipulator {
 
         modal.innerHTML = `
                             <div class="modal-content">
-                                <input type="text" id="taskNameInput" placeholder="Enter task name" />
-                                <textarea id="taskDescriptionInput" placeholder="Enter task description"></textarea>
-                                <div>
+                                <label for="taskNameInput">Task Name</label>
+                                <input type="text" id="taskNameInput" autofocus/>
+                                <label for="taskDescriptionInput">Task Description</label>
+                                <textarea id="taskDescriptionInput" rows="12" cols="42"></textarea>
+                                <div class="priority">
                                     <label>Priority:</label>
-                                    <input type="radio" id="priorityLow" name="taskPriority" value="low" />
+                                    <input type="radio" id="priorityLow" name="taskPriority" value="low" checked />
                                     <label for="priorityLow">Low</label>
                                     <input type="radio" id="priorityMedium" name="taskPriority" value="medium" />
                                     <label for="priorityMedium">Medium</label>
                                     <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
                                     <label for="priorityHigh">High</label>
                                 </div>
-                                <input type="date" id="taskDateInput" placeholder="Enter task date" />
+                                <section>
+                                    <label for="taskDateInput">Due Date</label>
+                                    <input type="date" id="taskDateInput" placeholder="Enter task date" />
+                                </section>
                                 <button id="addTaskButton">Add</button>
                             </div>
                             `;
 
-        document.body.appendChild(modal);
+
+        const mainGrid = document.querySelector(".main-grid");
+
+        mainGrid.appendChild(modal);
 
         this.eventListenersManager.addTaskModalListeners(modal, index);
     };
@@ -341,22 +344,30 @@ class DOMManipulator {
 
         modal.innerHTML = `
                             <div class="modal-content">
-                                <input type="text" id="taskNameInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskName}" />
-                                <textarea id="taskDescriptionInput">${projectsArray[projectIndex].tasks[taskIndex].taskDescription}</textarea>
-                                <div>
+                                <label for="taskNameInput">Task Name</label>
+                                <input type="text" id="taskNameInput" value="${projectsArray[projectIndex].tasks[taskIndex].taskName}" autofocus />
+                                <label for="taskDescriptionInput">Task Description</label>
+                                <textarea id="taskDescriptionInput" rows="12" cols="42">${projectsArray[projectIndex].tasks[taskIndex].taskDescription}</textarea>
+                                <div class="priority">
                                     <label>Priority:</label>
-                                    <input type="radio" id="priorityLow" name="taskPriority" value="low" />
+                                    <input type="radio" id="priorityLow" name="taskPriority" value="low"/>
                                     <label for="priorityLow">Low</label>
-                                    <input type="radio" id="priorityMedium" name="taskPriority" value="medium" />
+                                    <input type="radio" id="priorityMedium" name="taskPriority" value="medium"/>
                                     <label for="priorityMedium">Medium</label>
-                                    <input type="radio" id="priorityHigh" name="taskPriority" value="high" />
+                                    <input type="radio" id="priorityHigh" name="taskPriority" value="high"/>
                                     <label for="priorityHigh">High</label>
                                 </div>
-                                <input type="date" id="taskDateInput" value="${date}"/>
+                                <section>
+                                    <label for="taskDateInput">Due Date</label>
+                                    <input type="date" id="taskDateInput" value="${date}"/>
+                                </section>
                                 <button id="editTaskButton">Edit</button>
                             </div>
                             `;
-        document.body.appendChild(modal);
+
+        const mainGrid = document.querySelector(".main-grid");
+
+        mainGrid.appendChild(modal);
 
         this.eventListenersManager.editTaskModalListeners(modal, projectIndex, taskIndex);
 
@@ -389,8 +400,9 @@ class DOMManipulator {
             if (orderedTasks.length === 0) {
                 const emptyPageMessage = document.createElement("p");
                 emptyPageMessage.classList.add("empty-page-message");
-                emptyPageMessage.textContent = "No tasks found :)";
+                emptyPageMessage.textContent = "No tasks found, create a new project and add a new one!";
                 mainPage.appendChild(emptyPageMessage);
+                mainPage.classList.remove("hidden");
                 return;
             };
 
@@ -401,8 +413,6 @@ class DOMManipulator {
                     uniqueDays.push(taskDate);
                 };
             };
-
-            console.log(uniqueDays);
 
             let projectIndex;
             let taskIndex;
@@ -454,12 +464,8 @@ class DOMManipulator {
 
         mainPage.classList.add("hidden");
 
-        console.log(todayTasks);
-
         // Remove elements from todayTasks that are already completed
         todayTasks = todayTasks.filter(task => task.isCompleted === false);
-
-        console.log(todayTasks);
 
         setTimeout(() => {
 
@@ -468,6 +474,7 @@ class DOMManipulator {
                 emptyPageMessage.classList.add("empty-page-message");
                 emptyPageMessage.textContent = "No tasks today :)";
                 mainPage.appendChild(emptyPageMessage);
+                mainPage.classList.remove("hidden");
                 return;
             };
 
@@ -517,8 +524,6 @@ class DOMManipulator {
 
         mainPage.classList.add("hidden");
 
-        console.log(completedTasks);
-
         setTimeout(() => {
 
             if (completedTasks.length === 0) {
@@ -526,6 +531,7 @@ class DOMManipulator {
                 emptyPageMessage.classList.add("empty-page-message");
                 emptyPageMessage.textContent = "No task completed :(";
                 mainPage.appendChild(emptyPageMessage);
+                mainPage.classList.remove("hidden");
                 return;
             };
 

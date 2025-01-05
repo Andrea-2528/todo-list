@@ -6,11 +6,10 @@ export { MainController };
 
 // This is the class responsible for instantiating the other classes and
 // setting up the page through initialize.
-// When added, this class (together with StateManager) will also deal with localStorage
 
 class MainController {
     constructor() {
-        this.stateManager = new StateManager();
+        this.stateManager = new StateManager();         // Here the localStorage data is loaded if present ( as method in the constructor of StateManager )
         this.domManipulator = new DOMManipulator();
         this.eventListenersManager = new EventListenersManager(this.stateManager, this.domManipulator);
         this.domManipulator.setEventListenersManager(this.eventListenersManager);
