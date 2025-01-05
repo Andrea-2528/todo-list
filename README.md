@@ -1,7 +1,7 @@
 # TODO List Application
 
 ## Live View
-[text](https://andrea-2528.github.io/todo-list/)
+[TODO List](https://andrea-2528.github.io/todo-list/)
 
 ## Overview
 This project is an interactive **TODO List Application** designed to help users  manage their tasks and projects. It includes features like task prioritization, project categorization, and filtering of tasks based on their status and due dates.
