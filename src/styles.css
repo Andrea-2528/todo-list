@@ -86,7 +86,6 @@ h6 {
   font-style: normal;
 }
 
-
 :root {
   --gradient-color: linear-gradient(180deg, rgba(34, 190, 177, 1) 0%, rgba(69, 150, 242, 1) 100%);
   --color-primary-icons: #D9D9D9;
@@ -101,6 +100,7 @@ h6 {
   --color-tertiary-background: rgba(13, 38, 67, 0.53);
   --color-accent-primary: #22BEB1;
   --color-accent-secondary: #4596F2;
+  scrollbar-color: var(--color-accent-primary) var(--color-primary-background);
 }
 
 body {
@@ -561,4 +561,25 @@ img.expanded {
   background-image: var(--gradient-color);
   color: transparent;
   background-clip: text;
+}
+
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 30px; /* Scrollbar width */
+  height: 8px; /* Scrollbar height (for horizontal scrollbars) */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; /* Make the track transparent */
+  border-radius: 10px; /* Rounded corners for the track */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-accent-primary); /* Thumb color */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-secondary); /* Thumb color on hover */
 }
