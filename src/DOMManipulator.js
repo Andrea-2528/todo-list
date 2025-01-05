@@ -294,10 +294,15 @@ class DOMManipulator {
                             </div>
                             `;
 
+        const userScrollY = window.scrollY;
+        const viewPortHeight = window.innerHeight;
+        modal.style.top = `${userScrollY}px`
+        modal.style.height = `${viewPortHeight}px`;
+
+        document.body.style.overflow = "hidden";
+
         const mainGrid = document.querySelector(".main-grid");
-
         mainGrid.appendChild(modal);
-
         this.eventListenersManager.addProjectModalListeners(modal);
     };
 
@@ -328,11 +333,15 @@ class DOMManipulator {
                             </div>
                             `;
 
+        const userScrollY = window.scrollY;
+        const viewPortHeight = window.innerHeight;
+        modal.style.top = `${userScrollY}px`
+        modal.style.height = `${viewPortHeight}px`;
+
+        document.body.style.overflow = "hidden";
 
         const mainGrid = document.querySelector(".main-grid");
-
         mainGrid.appendChild(modal);
-
         this.eventListenersManager.addTaskModalListeners(modal, index);
     };
 
@@ -365,10 +374,15 @@ class DOMManipulator {
                             </div>
                             `;
 
+        const userScrollY = window.scrollY;
+        const viewPortHeight = window.innerHeight;
+        modal.style.top = `${userScrollY}px`
+        modal.style.height = `${viewPortHeight}px`;
+
+        document.body.style.overflow = "hidden";
+
         const mainGrid = document.querySelector(".main-grid");
-
         mainGrid.appendChild(modal);
-
         this.eventListenersManager.editTaskModalListeners(modal, projectIndex, taskIndex);
 
     };
@@ -382,8 +396,16 @@ class DOMManipulator {
                                 <button id="editProjectButton">Edit</button>
                             </div>
                             `;
-        document.body.appendChild(modal);
 
+        const userScrollY = window.scrollY;
+        const viewPortHeight = window.innerHeight;
+        modal.style.top = `${userScrollY}px`
+        modal.style.height = `${viewPortHeight}px`;
+
+        document.body.style.overflow = "hidden";
+
+        const mainGrid = document.querySelector(".main-grid");
+        mainGrid.appendChild(modal);
         this.eventListenersManager.editProjectModalListeners(modal, projectIndex);
     };
 
@@ -575,6 +597,7 @@ class DOMManipulator {
 
     removeModal(modal) {
         modal.remove();
+        document.body.style.overflow = `auto`;
     };
 
     createMainTask(task, taskIndex, projectIndex) {

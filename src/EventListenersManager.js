@@ -377,6 +377,12 @@ class EventListenersManager {
             this.domManipulator.renderSidebarProjects(this.stateManager.getAllProjects());
             this.domManipulator.renderMainProjectPage(this.stateManager.getProjectByIndex(projectIndex), projectIndex);
         });
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                this.domManipulator.removeModal(modal);
+            };
+        });
     };
 
 };

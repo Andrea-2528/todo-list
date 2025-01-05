@@ -126,7 +126,7 @@ button {
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -146,7 +146,6 @@ button {
 
 .modal-content {
   position: relative;
-  top: -6rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
